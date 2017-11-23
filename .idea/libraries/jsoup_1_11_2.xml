@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jsoup-1.11.2">
+    <CLASSES>
+      <root url="jar:///media/martin/Daten-Linux/Programmieren/sermon-online/android-app/app/libs/jsoup-1.11.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar:///media/martin/Daten-Linux/Programmieren/sermon-online/android-app/app/libs/jsoup-1.11.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

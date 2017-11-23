@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="de.schalter.sermononline.MainActivity">
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_border"
+        android:layout_marginLeft="@dimen/margin_border"
+        android:layout_marginRight="@dimen/margin_border"
+        android:layout_marginStart="@dimen/margin_border"
+        android:layout_marginTop="@dimen/margin_border"
+        android:id="@+id/textInputLayout">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:id="@+id/search_editText" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/search_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textInputLayout"
+        android:layout_alignRight="@+id/textInputLayout"
+        android:layout_below="@+id/textInputLayout"
+        android:text="@string/search" />
+
+    <!--
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_border"
+        android:layout_marginLeft="@dimen/margin_border"
+        android:layout_marginRight="@dimen/margin_border"
+        android:layout_marginStart="@dimen/margin_border"
+        android:layout_marginTop="@dimen/margin_border"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="@string/search"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+        -->
+
+</RelativeLayout>
