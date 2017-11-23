@@ -10,6 +10,7 @@ import android.util.Log;
 import de.schalter.sermononline.DBHelper;
 
 /**
+ * Receiver to be notified when a download is finished
  * Created by martin on 23.11.17.
  */
 

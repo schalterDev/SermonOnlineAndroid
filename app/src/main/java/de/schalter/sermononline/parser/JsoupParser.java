@@ -1,6 +1,7 @@
 package de.schalter.sermononline.parser;
 
 /**
+ * Parses a search page from sermon-online.de
  * Created by martin on 21.11.17.
  */
 
@@ -30,6 +31,11 @@ public class JsoupParser {
     private List<String> headers;
     private List<SermonListElement> content;
 
+    /**
+     * connects to the given url and downloads the html
+     * @param urlString url as string
+     * @throws IOException when the url is not an URL
+     */
     public void connect(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection ucon = (HttpURLConnection) url.openConnection();
@@ -50,7 +56,14 @@ public class JsoupParser {
         }
     }
 
+    /**
+     * parse the downloaded html file
+     * @throws NoDataFoundException when the downloaded html is empty (or not downloaded) or there are no results
+     */
     public void parse() throws NoDataFoundException {
+        if(html == null || html.equals(""))
+            throw new NoDataFoundException();
+
         Document doc = Jsoup.parse(html);
         try {
             Element resultTable = doc.select("body > table").get(DATA_TABLE_COUNT);
@@ -62,10 +75,18 @@ public class JsoupParser {
         }
     }
 
+    /**
+     * return headers of the result table
+     * @return headers
+     */
     public List<String> getHeaders() {
         return headers;
     }
 
+    /**
+     * return parses results
+     * @return all results
+     */
     public List<SermonListElement> getSermonElements() {
         return content;
     }

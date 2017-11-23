@@ -14,6 +14,7 @@ import de.schalter.sermononline.Utils;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
+ * A not cancleable dialog to show the user that the program is working
  * Created by martin on 15.11.16.
  */
 

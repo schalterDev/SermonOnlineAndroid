@@ -13,9 +13,8 @@ import java.util.List;
 import de.schalter.sermononline.parser.SermonElement;
 import de.schalter.sermononline.views.DownloadElement;
 
-import static android.provider.Settings.NameValueTable.VALUE;
-
 /**
+ * Database to store downloads
  * Created by martin on 22.11.17.
  */
 
@@ -65,17 +64,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void downloadStarted(String downloadUrl, SermonElement sermonElement, long downloadKeyId) throws IOException {
+    /**
+     * Save a download when it's started in the database.
+     * @param downloadUrl remote url of the sermon info page
+     * @param sermonElement downloaded sermon element
+     * @param downloadKeyId downloadId from DownloadManager
+     */
+    public void downloadStarted(String downloadUrl, SermonElement sermonElement, long downloadKeyId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
-        values.put(KEY_SERMONOBJECT, Utils.toString(sermonElement));
+        try {
+            values.put(KEY_SERMONOBJECT, Utils.toString(sermonElement));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         values.put(KEY_DOWNLOAD_ID, downloadKeyId);
 
         // Inserting Row
         db.insert(T_DOWNLOADS, null, values);
     }
 
+    /**
+     * Save the path on file system for a download
+     * @param downloadKeyId downloadId from DownloadManager
+     * @param path filePath on the local file system
+     */
     public void downloadCompleted(long downloadKeyId, String path) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -86,7 +100,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(T_DOWNLOADS, cv, KEY_DOWNLOAD_ID + "=" + downloadKeyId, null);
     }
 
-    public List<DownloadElement> getAllDownloads() throws IOException, ClassNotFoundException {
+    /**
+     * Get all downloads which are started (and not completed) and the completed ones
+     * @return all downloads
+     */
+    public List<DownloadElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_PATH + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS,null);
 
@@ -97,13 +115,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 DownloadElement downloadElement = new DownloadElement();
 
                 downloadElement.path = cursor.getString(0);
-                downloadElement.sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
-
-                downloadElements.add(downloadElement);
+                try {
+                    downloadElement.sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
+                    downloadElements.add(downloadElement);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
 
                 cursor.moveToNext();
             }
         }
+
+        cursor.close();
 
         return downloadElements;
     }

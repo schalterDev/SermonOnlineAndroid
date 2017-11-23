@@ -13,6 +13,7 @@ import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.parser.SermonListElement;
 
 /**
+ * View to be shown in the Sermon listview
  * Created by martin on 21.11.17.
  */
 
@@ -45,6 +46,9 @@ public class SermonView extends RelativeLayout {
         url = sermonListElement.links.get(0);
     }
 
+    /**
+     * starts a new SermonActivity
+     */
     public void click() {
         Intent intent = new Intent(activity, SermonActivity.class);
         intent.putExtra(SermonActivity.URL, url);

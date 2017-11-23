@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
+ * Utils to use everywhere
  * Created by martin on 22.11.17.
  */
 
@@ -42,6 +43,11 @@ public class Utils {
 
     private static Handler mainHandler;
 
+    /**
+     * Runs the runnable on main/ui thread
+     * @param context context
+     * @param run runnable to run
+     */
     public static void runOnUiThread(Context context, final Runnable run) {
         if(mainHandler == null)
             mainHandler = new Handler(context.getMainLooper());
@@ -54,6 +60,15 @@ public class Utils {
         });
     }
 
+    /**
+     * Download data with android download manager. Will be stored in downloads
+     * @param context context
+     * @param uri uri
+     * @param title title
+     * @param description description
+     * @param fileName filename
+     * @return downloadId from android download manager
+     */
     public static long downloadData (Context context, Uri uri, String title, String description, String fileName) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 

@@ -71,6 +71,9 @@ public class ResultActivity extends AppCompatActivity {
         loadDataAsynchron();
     }
 
+    /**
+     * Connect to sermon-online.com, parse website and show data
+     */
     private void loadDataAsynchron() {
         final WaitDialog dialog = new WaitDialog(ResultActivity.this, R.string.searching);
         dialog.show();

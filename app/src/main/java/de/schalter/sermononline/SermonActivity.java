@@ -58,6 +58,9 @@ public class SermonActivity extends AppCompatActivity {
         loadDataAsynchron();
     }
 
+    /**
+     * download button was clicked
+     */
     private void download() {
         final String linkContains = "dyndns.org";
         HashMap<String, String> links = new HashMap<>();
@@ -72,6 +75,9 @@ public class SermonActivity extends AppCompatActivity {
         new SermonDownloadDialog(this, R.string.available_downloads, links, sermonElement).show();
     }
 
+    /**
+     * connect to sermon-online.com, download, parse data and display it
+     */
     private void loadDataAsynchron() {
         final WaitDialog waitDialog = new WaitDialog(this, R.string.searching);
         waitDialog.show();

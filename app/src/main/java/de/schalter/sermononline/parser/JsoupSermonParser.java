@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Parse a single sermon page
  * Created by martin on 22.11.17.
  */
 
@@ -31,6 +32,11 @@ public class JsoupSermonParser {
         sermonElement = new SermonElement();
     }
 
+    /**
+     * Connect to the given url and download the html
+     * @param urlString url as String
+     * @throws IOException when the url is not an URL
+     */
     public void connect(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection ucon = (HttpURLConnection) url.openConnection();
@@ -51,6 +57,10 @@ public class JsoupSermonParser {
         }
     }
 
+    /**
+     * parse the downloaded html file
+     * @throws NoDataFoundException when the downloaded html is empty (or not downloaded) or there are no results
+     */
     public void parse() throws NoDataFoundException {
         Document doc = Jsoup.parse(html);
 
@@ -85,6 +95,11 @@ public class JsoupSermonParser {
         }
     }
 
+    /**
+     * Removes all unnecessari explanations
+     * @param string to shorten
+     * @return shorten string
+     */
     private String getDataFromString(String string) {
         int indexOfBracket = string.indexOf(")");
         if(indexOfBracket == -1) {
@@ -94,6 +109,12 @@ public class JsoupSermonParser {
         }
     }
 
+    /**
+     * Chekcs for a link in the given element.
+     * When a link is found it will be added to the sermonElement at the given index
+     * @param index column in the table
+     * @param element tablerow element
+     */
     private void checkForLinks(int index, Element element) {
         Element linkElement = element.selectFirst("a[href]");
         if(linkElement != null) {

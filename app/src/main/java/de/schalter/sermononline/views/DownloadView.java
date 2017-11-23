@@ -12,6 +12,7 @@ import de.schalter.sermononline.R;
 import de.schalter.sermononline.SermonActivity;
 
 /**
+ * View to be shown in the listview
  * Created by martin on 23.11.17.
  */
 

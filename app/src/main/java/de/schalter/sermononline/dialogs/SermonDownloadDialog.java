@@ -22,6 +22,7 @@ import de.schalter.sermononline.Utils;
 import de.schalter.sermononline.parser.SermonElement;
 
 /**
+ * Dialog to show all possible downloads for one sermonPage
  * Created by martin on 22.11.17.
  */
 
@@ -33,13 +34,20 @@ public class SermonDownloadDialog {
     private Activity activity;
     private final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
 
-    public SermonDownloadDialog(final Activity activity, int ressource, final HashMap<String, String> links, final SermonElement sermonElement) {
+    /**
+     * Prepares a dialog to show all possible downloads for one sermonPage
+     * @param activity activity
+     * @param titleRessource string ressource for the title
+     * @param links Links with their description. HasMap<Description, link>
+     * @param sermonElement sermonElement
+     */
+    public SermonDownloadDialog(final Activity activity, int titleRessource, final HashMap<String, String> links, final SermonElement sermonElement) {
         this.activity = activity;
 
         permission();
 
         builder = new AlertDialog.Builder(this.activity);
-        builder.setTitle(ressource);
+        builder.setTitle(titleRessource);
 
         ListView modeList = new ListView(this.activity);
 
@@ -66,18 +74,9 @@ public class SermonDownloadDialog {
                         title, title, title + "." + fileEnding);
 
                 DBHelper dbHelper = DBHelper.getInstance(SermonDownloadDialog.this.activity);
-                try {
-                    dbHelper.downloadStarted(linksArray[position], sermonElement, downloadId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                dbHelper.downloadStarted(linksArray[position], sermonElement, downloadId);
 
-                Utils.runOnUiThread(activity, new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.cancel();
-                    }
-                });
+                dialog.cancel();
             }
         });
 

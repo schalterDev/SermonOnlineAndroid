@@ -25,16 +25,12 @@ import de.schalter.sermononline.views.DownloadView;
 import de.schalter.sermononline.views.SermonView;
 
 /**
+ * Fragment to show all downloads stored in the database
  * Created by martin on 21.11.17.
  */
 
 public class DownloadsFragment extends Fragment {
 
-    public DownloadsFragment() {
-
-    }
-
-    private ListView listView;
     private ListAdapter adapter;
     private Context context;
 
@@ -54,7 +50,7 @@ public class DownloadsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_downloads, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.list_downloads);
+        ListView listView = (ListView) rootView.findViewById(R.id.list_downloads);
 
         List<DownloadView> views = new ArrayList<>();
         adapter = new ListAdapter(context, views);
@@ -65,35 +61,29 @@ public class DownloadsFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Loads the downloads async from the database
+     */
     private void loadDataAsync() {
-        Log.d("SermonOnline", "LoadData async");
-
         Thread background = new Thread(new Runnable() {
             @Override
             public void run() {
-                DBHelper dbHelper = DBHelper.getInstance(context);
-                try {
-                    List<DownloadElement> downloads = dbHelper.getAllDownloads();
-                    final List<DownloadView> views = new ArrayList<>();
+            DBHelper dbHelper = DBHelper.getInstance(context);
+                List<DownloadElement> downloads = dbHelper.getAllDownloads();
+                final List<DownloadView> views = new ArrayList<>();
 
-                    for(DownloadElement download : downloads) {
-                        DownloadView downloadView = new DownloadView(getActivity(), download);
-                        views.add(downloadView);
-                    }
-
-                    Utils.runOnUiThread(context, new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addAll(views);
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                for(DownloadElement download : downloads) {
+                    DownloadView downloadView = new DownloadView(getActivity(), download);
+                    views.add(downloadView);
                 }
+
+                Utils.runOnUiThread(context, new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.addAll(views);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
         background.start();

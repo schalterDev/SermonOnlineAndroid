@@ -13,6 +13,7 @@ import de.schalter.sermononline.Utils;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
+ * An Dialog which shows an error
  * Created by martin on 22.11.17.
  */
 
@@ -122,6 +123,11 @@ public class ErrorDialog {
         });
     }
 
+    /**
+     * Set the onClickListener for the positive button
+     * @param clickListener clickListener
+     * @return the ErrorDialog
+     */
     public ErrorDialog setOnClickListener(DialogInterface.OnClickListener clickListener) {
         builder.setPositiveButton(R.string.okay, clickListener);
         return this;
