@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.schalter.sermononline.parser.SermonElement;
-import de.schalter.sermononline.views.DownloadElement;
 
 /**
  * Database to store downloads
@@ -104,20 +103,17 @@ public class DBHelper extends SQLiteOpenHelper {
      * Get all downloads which are started (and not completed) and the completed ones
      * @return all downloads
      */
-    public List<DownloadElement> getAllDownloads() {
+    public List<SermonElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + KEY_PATH + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS,null);
+        Cursor cursor = db.rawQuery("select " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
+                + " ORDER BY " + KEY_ID,null);
 
-        List<DownloadElement> downloadElements = new ArrayList<>();
+        List<SermonElement> downloadElements = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                DownloadElement downloadElement = new DownloadElement();
-
-                downloadElement.path = cursor.getString(0);
                 try {
-                    downloadElement.sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
-                    downloadElements.add(downloadElement);
+                    downloadElements.add( (SermonElement) Utils.fromString(cursor.getString(0)) );
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }

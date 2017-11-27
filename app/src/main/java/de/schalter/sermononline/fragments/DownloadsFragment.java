@@ -4,24 +4,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.Utils;
-import de.schalter.sermononline.views.DownloadElement;
-import de.schalter.sermononline.views.DownloadView;
+import de.schalter.sermononline.parser.SermonElement;
 import de.schalter.sermononline.views.SermonView;
 
 /**
@@ -52,7 +47,7 @@ public class DownloadsFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.list_downloads);
 
-        List<DownloadView> views = new ArrayList<>();
+        List<SermonView> views = new ArrayList<>();
         adapter = new ListAdapter(context, views);
         listView.setAdapter(adapter);
 
@@ -69,11 +64,11 @@ public class DownloadsFragment extends Fragment {
             @Override
             public void run() {
             DBHelper dbHelper = DBHelper.getInstance(context);
-                List<DownloadElement> downloads = dbHelper.getAllDownloads();
-                final List<DownloadView> views = new ArrayList<>();
+                List<SermonElement> downloads = dbHelper.getAllDownloads();
+                final List<SermonView> views = new ArrayList<>();
 
-                for(DownloadElement download : downloads) {
-                    DownloadView downloadView = new DownloadView(getActivity(), download);
+                for(SermonElement download : downloads) {
+                    SermonView downloadView = new SermonView(getActivity(), download.toSermonListElement());
                     views.add(downloadView);
                 }
 
@@ -89,9 +84,9 @@ public class DownloadsFragment extends Fragment {
         background.start();
     }
 
-    private class ListAdapter extends ArrayAdapter<DownloadView> {
+    private class ListAdapter extends ArrayAdapter<SermonView> {
 
-        ListAdapter(@NonNull Context context, List<DownloadView> elements) {
+        ListAdapter(@NonNull Context context, List<SermonView> elements) {
             super(context, 0, elements);
         }
 

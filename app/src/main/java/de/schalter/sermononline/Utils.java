@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utils to use everywhere
@@ -81,6 +83,35 @@ public class Utils {
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
         return downloadManager.enqueue(request);
+    }
+
+    /**
+     * checks if an array contains any element of an list
+     * @param array array
+     * @param containObjects array with all element to check if they are in the array
+     * @param <T>
+     * @return -1 if no element from containObjects is in array. Otherwise the first index
+     */
+    public static <T> int indexOf (T[] array, T[] containObjects) {
+        return indexOf(Arrays.asList(array), containObjects);
+    }
+
+    /**
+     * checks if an array contains any element of an list
+     * @param list list
+     * @param containObjects array with all element to check if they are in the array
+     * @param <T>
+     * @return -1 if no element from containObjects is in array. Otherwise the first index
+     */
+    public static <T> int indexOf (List<T> list, T[] containObjects) {
+        int counter = 0;
+        for(T containObject : containObjects) {
+            if(list.contains(containObject))
+                return counter;
+            counter++;
+        }
+
+        return -1;
     }
 
 }

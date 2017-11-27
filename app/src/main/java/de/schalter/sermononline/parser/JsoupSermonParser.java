@@ -38,6 +38,8 @@ public class JsoupSermonParser {
      * @throws IOException when the url is not an URL
      */
     public void connect(String urlString) throws IOException {
+        sermonElement.sermonUrlPage = urlString;
+
         URL url = new URL(urlString);
         HttpURLConnection ucon = (HttpURLConnection) url.openConnection();
 

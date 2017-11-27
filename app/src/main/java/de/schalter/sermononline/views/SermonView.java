@@ -36,12 +36,12 @@ public class SermonView extends RelativeLayout {
         TextView date = (TextView) findViewById(R.id.sermon_date);
         TextView duration = (TextView) findViewById(R.id.sermon_duration);
 
-        title.setText(sermonListElement.elementsText.get(0));
-        author.setText(sermonListElement.elementsText.get(1));
-        bible.setText(sermonListElement.elementsText.get(2));
-        category.setText(sermonListElement.elementsText.get(4));
-        date.setText(sermonListElement.elementsText.get(5));
-        duration.setText(sermonListElement.elementsText.get(6));
+        title.setText(sermonListElement.elementsText.get(SermonListElement.TITLE));
+        author.setText(sermonListElement.elementsText.get(SermonListElement.AUTHOR));
+        bible.setText(sermonListElement.elementsText.get(SermonListElement.PASSAGE));
+        category.setText(sermonListElement.elementsText.get(SermonListElement.CATEGORY));
+        date.setText(sermonListElement.elementsText.get(SermonListElement.DATE));
+        duration.setText(sermonListElement.elementsText.get(SermonListElement.DURATION));
 
         url = sermonListElement.links.get(0);
     }

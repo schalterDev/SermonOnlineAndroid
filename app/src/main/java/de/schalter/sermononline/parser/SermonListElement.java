@@ -5,22 +5,32 @@ package de.schalter.sermononline.parser;
  * Created by martin on 21.11.17.
  */
 
-import android.util.SparseArray;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SermonListElement {
+
+    //order is title, author, passage, language, category, date/time, duration, pages
+    public static final int TITLE = 0;
+    public static final int AUTHOR = 1;
+    public static final int PASSAGE = 2;
+    public static final int LANGUAGE = 3;
+    public static final int CATEGORY = 4;
+    public static final int DATE = 5;
+    public static final int DURATION = 6;
+    public static final int PAGES = 7;
+    public static final int SIZE = 8;
 
     //same order as at the website
     public List<String> elementsText;
 
     //index is refering to elementsText
-    public SparseArray<String> links;
+    public HashMap<Integer, String> links;
 
     public SermonListElement() {
         elementsText = new ArrayList<>();
-        links = new SparseArray<>();
+        links = new HashMap<>();
     }
 
     public String toString() {
