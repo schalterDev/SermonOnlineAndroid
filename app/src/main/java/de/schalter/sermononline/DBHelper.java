@@ -25,6 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String KEY_ID = "id";
     private static final String KEY_DOWNLOADURL = "downloadUrl";
+    private static final String KEY_DOWNLOADURL_FILE = "downloadUrlFile";
     private static final String KEY_PATH = "path";
     private static final String KEY_SERMONOBJECT = "sermonObject";
     private static final String KEY_DOWNLOAD_ID = "downloadId";
@@ -51,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 KEY_DOWNLOAD_ID + " INTEGER, " +
                 KEY_DOWNLOADURL + " TEXT, " +
+                KEY_DOWNLOADURL_FILE + " TEXT, " +
                 KEY_SERMONOBJECT + " TEXT, " +
                 KEY_PATH + " TEXT" +
                 ");";
@@ -66,13 +68,15 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Save a download when it's started in the database.
      * @param downloadUrl remote url of the sermon info page
+     * @param downloadUrlFile remove url of the file that was downloaded
      * @param sermonElement downloaded sermon element
      * @param downloadKeyId downloadId from DownloadManager
      */
-    public void downloadStarted(String downloadUrl, SermonElement sermonElement, long downloadKeyId) {
+    public void downloadStarted(String downloadUrl, String downloadUrlFile, SermonElement sermonElement, long downloadKeyId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
+        values.put(KEY_DOWNLOADURL_FILE, downloadUrlFile);
         try {
             values.put(KEY_SERMONOBJECT, Utils.toString(sermonElement));
         } catch (IOException e) {
@@ -154,5 +158,34 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return -1;
+    }
+
+    private String getColumn(String column, int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select " + column + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
+
+        if(cursor.moveToFirst()) {
+            return cursor.getString(0);
+        }
+
+        return null;
+    }
+
+    public String getSermonPageUrl(int id) {
+        return getColumn(KEY_DOWNLOADURL, id);
+    }
+
+    public String getFileUrl(int id) {
+        return getColumn(KEY_DOWNLOADURL_FILE, id);
+    }
+
+    public void updateDownloadManagerId(int id, long downloadManagerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_DOWNLOAD_ID, downloadManagerId);
+
+        // update Row
+        db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
     }
 }

@@ -74,7 +74,7 @@ public class SermonDownloadDialog {
                         title, title, title + "." + fileEnding);
 
                 DBHelper dbHelper = DBHelper.getInstance(SermonDownloadDialog.this.activity);
-                dbHelper.downloadStarted(linksArray[position], sermonElement, downloadId);
+                dbHelper.downloadStarted(sermonElement.sermonUrlPage, linksArray[position], sermonElement, downloadId);
 
                 dialog.cancel();
             }
