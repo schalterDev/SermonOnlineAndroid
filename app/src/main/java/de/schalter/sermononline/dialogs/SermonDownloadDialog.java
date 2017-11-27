@@ -68,7 +68,7 @@ public class SermonDownloadDialog {
                 String title = sermonElement.data.get(0);
                 String link = linksArray[position];
                 int indexLastPoint = link.lastIndexOf(".");
-                String fileEnding = link.substring(indexLastPoint);
+                String fileEnding = link.substring(indexLastPoint + 1);
 
                 long downloadId = Utils.downloadData(SermonDownloadDialog.this.activity, Uri.parse(link),
                         title, title, title + "." + fileEnding);

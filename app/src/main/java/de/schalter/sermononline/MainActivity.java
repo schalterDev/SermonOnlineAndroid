@@ -1,6 +1,7 @@
 package de.schalter.sermononline;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,9 @@ import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final int SEARCH = 0;
+    private final int DOWNLOADS = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +65,15 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DownloadsFragment fragment = (DownloadsFragment) mSectionsPagerAdapter.getItem(DOWNLOADS);
+        fragment.update();
     }
 
     @Override
@@ -86,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void snackbar(int message) {
+        Snackbar.make(findViewById(R.id.main_content), message, Snackbar.LENGTH_LONG).show();
+    }
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -99,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            if(position == 0)
+            if(position == SEARCH)
                 return SearchFragment.newInstance();
-            else if(position == 1)
+            else if(position == DOWNLOADS)
                 return DownloadsFragment.newInstance();
 
             return null;
@@ -116,9 +132,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case 0:
+                case SEARCH:
                     return getString(R.string.search);
-                case 1:
+                case DOWNLOADS:
                     return getString(R.string.downloads);
             }
             return null;

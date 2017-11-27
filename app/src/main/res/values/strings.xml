@@ -17,4 +17,6 @@
     <string name="network_error">Network error: please check your internet connection</string>
     <string name="data_error">no data available or unable to load data</string>
     <string name="available_downloads">Available downloads</string>
+    <string name="fileNotExists">File does not exists (maybe deleted?)</string>
+    <string name="deleted">Deleted</string>
 </resources>

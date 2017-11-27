@@ -105,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public List<SermonElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
+        Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
                 + " ORDER BY " + KEY_ID,null);
 
         List<SermonElement> downloadElements = new ArrayList<>();
@@ -113,7 +113,9 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 try {
-                    downloadElements.add( (SermonElement) Utils.fromString(cursor.getString(0)) );
+                    SermonElement sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
+                    sermonElement.id = cursor.getInt(0);
+                    downloadElements.add(sermonElement);
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -125,5 +127,32 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return downloadElements;
+    }
+
+    public String getRessourcePath(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select " + KEY_PATH + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
+
+        if(cursor.moveToFirst()) {
+            return cursor.getString(0);
+        }
+
+        return null;
+    }
+
+    public void removeDownload(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(T_DOWNLOADS, KEY_ID + " = " + id, null);
+    }
+
+    public long getDownloadId(int sermonId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + sermonId, null);
+
+        if(cursor.moveToFirst()) {
+            return cursor.getLong(0);
+        }
+
+        return -1;
     }
 }

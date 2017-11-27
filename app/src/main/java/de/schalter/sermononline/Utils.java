@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,6 +86,14 @@ public class Utils {
         return downloadManager.enqueue(request);
     }
 
+    public static void deleteDataFromDownloadManager(Context context, long downloadId) {
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        if (downloadManager != null) {
+            downloadManager.remove(downloadId);
+        }
+    }
+
     /**
      * checks if an array contains any element of an list
      * @param array array
@@ -97,7 +106,7 @@ public class Utils {
     }
 
     /**
-     * checks if an array contains any element of an list
+     * checks if an array contains any element of an list.
      * @param list list
      * @param containObjects array with all element to check if they are in the array
      * @param <T>
@@ -107,11 +116,43 @@ public class Utils {
         int counter = 0;
         for(T containObject : containObjects) {
             if(list.contains(containObject))
-                return counter;
-            counter++;
+                return list.indexOf(containObject);
         }
 
         return -1;
+    }
+
+    /**
+     * Get the file extension from an url or path
+     * @param url url or path
+     * @return file extension
+     */
+    public static String getFileExtension(String url) {
+        if (url.contains("?")) {
+            url = url.substring(0, url.indexOf("?"));
+        }
+        if (url.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = url.substring(url.lastIndexOf(".") + 1);
+            if (ext.contains("%")) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.contains("/")) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+            return ext.toLowerCase();
+
+        }
+    }
+
+    public static List<String> toLowerCase(List<String> list) {
+        List<String> newList = new ArrayList<>();
+        for(String string : list) {
+            newList.add(string.toLowerCase());
+        }
+
+        return newList;
     }
 
 }

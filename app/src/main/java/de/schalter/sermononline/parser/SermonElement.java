@@ -32,6 +32,9 @@ public class SermonElement implements Serializable {
     //<index in headers (or data), link (url)>
     public HashMap<Integer, String> links;
 
+    //id in the database
+    public int id = -1;
+
     SermonElement() {
         headers = new ArrayList<>();
         data = new ArrayList<>();
@@ -43,6 +46,11 @@ public class SermonElement implements Serializable {
      * @return new sermonListElement
      */
     public SermonListElement toSermonListElement() {
+        headers = Utils.toLowerCase(this.headers);
+        for(int i = 0; i < headers.size(); i++) {
+            headers.set(i, headers.get(i).replaceAll(":", ""));
+        }
+
         SermonListElement sermonListElement = new SermonListElement();
         for(int i = 0; i < SermonListElement.SIZE; i++) {
             switch (i) {
