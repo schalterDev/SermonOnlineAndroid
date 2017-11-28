@@ -99,6 +99,12 @@ public class DownloadsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        update();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
@@ -151,11 +157,8 @@ public class DownloadsFragment extends Fragment {
     }
 
     public void update() {
-        if(adapter != null) {
-            adapter.clear();
-            adapter.notifyDataSetChanged();
+        if(adapter != null)
             loadDataAsync();
-        }
     }
 
     private void setSelectionMode(boolean selectionMode) {
@@ -201,8 +204,11 @@ public class DownloadsFragment extends Fragment {
                 Utils.runOnUiThread(context, new Runnable() {
                     @Override
                     public void run() {
-                        adapter.addAll(views);
-                        adapter.notifyDataSetChanged();
+                        if(adapter != null) {
+                            adapter.clear();
+                            adapter.addAll(views);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }

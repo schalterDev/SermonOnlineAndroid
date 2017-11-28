@@ -3,10 +3,12 @@ package de.schalter.sermononline.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
 import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.R;
+import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.Utils;
 import de.schalter.sermononline.objects.SermonElement;
 
@@ -26,9 +28,11 @@ public class SermonNotFoundDialog {
     /**
      *
      * @param activity activity
+     * @param sermonId id (from database) of the sermon
      */
     public SermonNotFoundDialog(final Activity activity, int sermonId) {
         this.activity = activity;
+        this.sermonId = sermonId;
 
         builder = new AlertDialog.Builder(this.activity);
         builder.setTitle(R.string.fileNotExists);
@@ -61,21 +65,35 @@ public class SermonNotFoundDialog {
         dialog.show();
     }
 
+    /**
+     * redownload the sermon
+     */
     private void download() {
         DBHelper dbHelper = DBHelper.getInstance(activity);
+        Utils.deleteDataFromDownloadManager(activity, dbHelper.getDownloadId(sermonId));
         String fileUrl = dbHelper.getFileUrl(sermonId);
         SermonElement sermonElement = dbHelper.getSermonElement(sermonId);
         Utils.downloadSermon(activity, sermonElement, fileUrl);
     }
 
+    /**
+     * Open the sermon page in the app
+     */
     private void openSermonPage() {
-
+        DBHelper dbHelper = DBHelper.getInstance(activity);
+        Intent intent = new Intent(activity, SermonActivity.class);
+        intent.putExtra(SermonActivity.URL, dbHelper.getSermonPageUrl(sermonId));
+        activity.startActivity(intent);
     }
 
+    /**
+     * deletes the entry from database
+     */
     private void delete() {
         DBHelper dbHelper = DBHelper.getInstance(activity);
         long downloadId = dbHelper.getDownloadId(sermonId);
         Utils.deleteDataFromDownloadManager(activity, downloadId);
+        dbHelper.removeDownload(sermonId);
     }
 
 }

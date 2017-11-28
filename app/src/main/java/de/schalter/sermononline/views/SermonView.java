@@ -19,6 +19,7 @@ import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.Utils;
+import de.schalter.sermononline.dialogs.SermonNotFoundDialog;
 import de.schalter.sermononline.objects.SermonListElement;
 
 /**
@@ -86,7 +87,9 @@ public class SermonView extends RelativeLayout {
 
         //Check if path exists
         if(path == null ||  !(new File(URI.create(path)).exists())) {
-            activity.snackbar(R.string.fileNotExists);
+            //activity.snackbar(R.string.fileNotExists);
+            SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(activity, id);
+            sermonNotFoundDialog.show();
         } else {
             MimeTypeMap myMime = MimeTypeMap.getSingleton();
             Intent newIntent = new Intent(Intent.ACTION_VIEW);

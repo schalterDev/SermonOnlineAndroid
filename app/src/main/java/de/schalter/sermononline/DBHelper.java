@@ -3,6 +3,7 @@ package de.schalter.sermononline;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -77,8 +78,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         //First check if downloadUrl is already in the system
         SQLiteDatabase read = this.getReadableDatabase();
+
+        String downloadUrlFileSql = DatabaseUtils.sqlEscapeString(downloadUrlFile);
+
         String checkIfExistsSql = "select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS +
-                " where " + KEY_DOWNLOADURL_FILE + " = " + downloadUrlFile;
+                " where " + KEY_DOWNLOADURL_FILE + " = " + downloadUrlFileSql;
 
         Cursor cursor = read.rawQuery(checkIfExistsSql,null);
 
@@ -105,7 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert(T_DOWNLOADS, null, values);
         } else {
             //updating row
-            db.update(T_DOWNLOADS, values, KEY_DOWNLOADURL_FILE + " = " + downloadUrlFile, null);
+            db.update(T_DOWNLOADS, values, KEY_DOWNLOADURL_FILE + " = " + downloadUrlFileSql, null);
         }
     }
 

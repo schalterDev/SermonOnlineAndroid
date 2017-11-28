@@ -74,7 +74,7 @@ public class Utils {
      * @param fileName filename
      * @return downloadId from android download manager
      */
-    public static long downloadData (Context context, Uri uri, String title, String description, String fileName) {
+    public static long downloadDataWithDownloadManager(Context context, Uri uri, String title, String description, String fileName) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
         DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -93,7 +93,7 @@ public class Utils {
         int indexLastPoint = link.lastIndexOf(".");
         String fileEnding = link.substring(indexLastPoint + 1);
 
-        long downloadId = Utils.downloadData(context, Uri.parse(link),
+        long downloadId = Utils.downloadDataWithDownloadManager(context, Uri.parse(link),
                 title, title, title + "." + fileEnding);
 
         DBHelper dbHelper = DBHelper.getInstance(context);
@@ -160,6 +160,11 @@ public class Utils {
         }
     }
 
+    /**
+     * changes all elements in the list to a lowercase stirng
+     * @param list list with strings
+     * @return new list with only lowerCase strings
+     */
     public static List<String> toLowerCase(List<String> list) {
         List<String> newList = new ArrayList<>();
         for(String string : list) {

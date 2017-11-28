@@ -39,7 +39,7 @@ public class SermonElement implements Serializable {
     //id in the database
     public int id = -1;
 
-    SermonElement() {
+    public SermonElement() {
         headers = new ArrayList<>();
         data = new ArrayList<>();
         links = new HashMap<>();
