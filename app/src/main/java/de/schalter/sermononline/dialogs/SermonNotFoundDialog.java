@@ -19,7 +19,6 @@ import de.schalter.sermononline.objects.SermonElement;
 public class SermonNotFoundDialog {
 
     private AlertDialog.Builder builder;
-    private Dialog dialog;
 
     private Activity activity;
 
@@ -60,7 +59,7 @@ public class SermonNotFoundDialog {
     }
 
     public void show() {
-        dialog = builder.create();
+        Dialog dialog = builder.create();
 
         dialog.show();
     }

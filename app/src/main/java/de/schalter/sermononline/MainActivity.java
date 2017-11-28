@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void snackbar(int message) {
-        Snackbar.make(findViewById(R.id.main_content), message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     /**

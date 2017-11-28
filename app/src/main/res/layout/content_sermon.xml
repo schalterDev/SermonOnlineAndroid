@@ -4,32 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coordinator_sermon"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="de.schalter.sermononline.SermonActivity"
     tools:showIn="@layout/activity_sermon">
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_sermon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <TableLayout
-                android:id="@+id/table_sermonData"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_border"
-                android:layout_marginStart="@dimen/margin_border"
-                android:layout_marginTop="@dimen/margin_border"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
-            </TableLayout>
+                <TableLayout
+                    android:id="@+id/table_sermonData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_border"
+                    android:layout_marginStart="@dimen/margin_border"
+                    android:layout_marginTop="@dimen/margin_border"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        </RelativeLayout>
-    </ScrollView>
+                </TableLayout>
+
+            </RelativeLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingButton_sermon"

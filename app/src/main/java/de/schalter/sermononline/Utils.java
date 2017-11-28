@@ -2,10 +2,12 @@ package de.schalter.sermononline;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -172,6 +174,30 @@ public class Utils {
         }
 
         return newList;
+    }
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @return A float value to represent px equivalent to dp depending on device density
+     */
+    public static float convertDpToPixel(float dp){
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param px A value in px (pixels) unit. Which we need to convert into db
+     * @return A float value to represent dp equivalent to px value
+     */
+    public static float convertPixelsToDp(float px){
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
     }
 
 }

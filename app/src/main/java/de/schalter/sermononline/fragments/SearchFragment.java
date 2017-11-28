@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
@@ -26,6 +27,8 @@ public class SearchFragment extends Fragment {
 
     private static SearchFragment instance;
 
+    private Spinner spinnerLanguage;
+
     public static SearchFragment newInstance() {
         if(instance == null)
             instance = new SearchFragment();
@@ -39,31 +42,27 @@ public class SearchFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         final EditText editText = (EditText) rootView.findViewById(R.id.search_editText);
+        spinnerLanguage = (Spinner) rootView.findViewById(R.id.spinner_language);
 
         Button searchButton = (Button) rootView.findViewById(R.id.search_btn);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                search(editText.getText().toString());
+                int[] languages = getResources().getIntArray(R.array.languages_codes);
+                int languageCode = languages[spinnerLanguage.getSelectedItemPosition()];
+                search(editText.getText().toString(), languageCode);
             }
         });
 
         return rootView;
     }
 
-    /**
-     * cenerates a url with search request and starts the resultActivity
-     * @param text searchText
-     */
-    private void search(String text) {
-        String searchEncoded = Uri.encode(text);
-        String url = "http://sermon-online.com/search.pl?lang=de&id=0&start=1&searchstring=" + searchEncoded + "&author=0&language=0&category=0&mediatype=0&order=12&count=25&x=0&y=0";
-
+    private void search(String searchText, int languageCode) {
         Intent intent = new Intent(this.getActivity(), ResultActivity.class);
-        intent.putExtra(ResultActivity.URL, url);
-        intent.putExtra(ResultActivity.SEARCH, text);
+        intent.putExtra(ResultActivity.SEARCHTEXT, searchText);
+        intent.putExtra(ResultActivity.LANGUAGE, languageCode);
         startActivity(intent);
-
     }
+
 
 }

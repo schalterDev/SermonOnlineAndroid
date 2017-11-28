@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -31,6 +34,9 @@ public class SermonActivity extends AppCompatActivity {
     private String url;
 
     private TableLayout table;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton floatingActionButton;
 
     private SermonElement sermonElement;
 
@@ -42,19 +48,43 @@ public class SermonActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_sermon);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadDataAsynchron();
+            }
+        });
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_sermon);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton_sermon);
+
         table = (TableLayout) findViewById(R.id.table_sermonData);
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton_sermon);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 download();
             }
         });
+        floatingActionButton.setEnabled(false);
 
         Intent intent = getIntent();
         url = intent.getStringExtra(URL);
 
         loadDataAsynchron();
+    }
+
+    public void snackbar(int message, int duration) {
+        Snackbar.make(coordinatorLayout, message, duration).show();
+    }
+
+    public void snackbarOnUI(final int message, final int duration) {
+        Utils.runOnUiThread(this, new Runnable() {
+            @Override
+            public void run() {
+                snackbar(message, duration);
+            }
+        });
     }
 
     /**
@@ -78,10 +108,8 @@ public class SermonActivity extends AppCompatActivity {
      * connect to sermon-online.com, download, parse data and display it
      */
     private void loadDataAsynchron() {
-        final WaitDialog waitDialog = new WaitDialog(this, R.string.searching);
-        waitDialog.show();
-
-        waitDialog.updateMessage(R.string.connecting);
+        swipeRefreshLayout.setRefreshing(true);
+        snackbarOnUI(R.string.connecting, Snackbar.LENGTH_INDEFINITE);
 
         Thread loadInBackground = new Thread(new Runnable() {
             @Override
@@ -92,11 +120,11 @@ public class SermonActivity extends AppCompatActivity {
                 try {
                     parser.connect(url);
 
-                    waitDialog.updateMessageOnMainThread(R.string.parsing);
+                    snackbarOnUI(R.string.parsing, Snackbar.LENGTH_INDEFINITE);
 
                     parser.parse();
 
-                    waitDialog.updateMessageOnMainThread(R.string.buildingScreen);
+                    snackbarOnUI(R.string.buildingScreen, Snackbar.LENGTH_INDEFINITE);
 
                     final SermonElement sermonElement = parser.getSermonElement();
                     SermonActivity.this.sermonElement = sermonElement;
@@ -105,18 +133,20 @@ public class SermonActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             loadSermon(sermonElement);
-                            waitDialog.close();
+                            swipeRefreshLayout.setRefreshing(false);
+                            floatingActionButton.setEnabled(true);
+                            snackbar(R.string.finished, Snackbar.LENGTH_SHORT);
                         }
                     });
                 } catch (IOException e) {
                     e.printStackTrace();
-                    waitDialog.closeOnMainThread();
+                    snackbarOnUI(R.string.network_error, Snackbar.LENGTH_LONG);
                     new ErrorDialog(SermonActivity.this, getString(R.string.error), getString(R.string.network_error) + "\n\n" + e.getMessage())
                             .setOnClickListener(getOnClickListener())
                             .showOnMainThread();
                 } catch (NoDataFoundException e) {
                     e.printStackTrace();
-                    waitDialog.closeOnMainThread();
+                    snackbarOnUI(R.string.data_error, Snackbar.LENGTH_LONG);
                     new ErrorDialog(SermonActivity.this, getString(R.string.error), getString(R.string.data_error) + "\n\n" + e.getMessage())
                             .setOnClickListener(getOnClickListener())
                             .showOnMainThread();
@@ -142,6 +172,7 @@ public class SermonActivity extends AppCompatActivity {
             TableRow row = new TableRow(this);
             TextView title = new TextView(this);
             title.setText(sermonElement.headers.get(i));
+            title.setMaxWidth((int) Utils.convertDpToPixel(120));
 
             TextView content = new TextView(this);
             content.setText(sermonElement.data.get(i));

@@ -41,7 +41,12 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/sermon_title"
-                android:text="Predigt, Gottesdienst" />
+                android:layout_toEndOf="@+id/sermon_author"
+                android:layout_toRightOf="@+id/sermon_author"
+                android:maxLines="3"
+                android:text="Predigt, Gottesdienst"
+                android:textAlignment="textEnd"
+                android:gravity="end"/>
 
             <TextView
                 android:id="@+id/sermon_bible"
@@ -49,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/sermon_author"
+                android:layout_below="@+id/sermon_categorie"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="Apostelgeschichte und noch gaaaanz viel kann da stehen aber maximal 2 zeilen waiel es dann nichts mehr anzigen sollte" />

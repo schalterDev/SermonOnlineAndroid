@@ -95,18 +95,20 @@ public class JsoupSermonParser {
         }
     }
 
+    private final static String[] toRemove = {"Download mit rechter Maustaste & Ziel speichern unter (Internet Explorer) oder Link speichern unter... (Google Chrome)",
+            "Right click here & Save target as (IE) or Save link... (Google Chrome)"};
+
     /**
      * Removes all unnecessari explanations
      * @param string to shorten
      * @return shorten string
      */
     private String getDataFromString(String string) {
-        int indexOfBracket = string.indexOf(")");
-        if(indexOfBracket == -1) {
-            return string;
-        } else {
-            return string.substring(0, indexOfBracket + 1);
+        for(String remove : toRemove) {
+            string = string.replace(remove, "");
         }
+
+        return string;
     }
 
     /**
