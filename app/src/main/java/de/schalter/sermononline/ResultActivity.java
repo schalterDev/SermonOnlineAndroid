@@ -22,7 +22,7 @@ import de.schalter.sermononline.dialogs.ErrorDialog;
 import de.schalter.sermononline.dialogs.WaitDialog;
 import de.schalter.sermononline.parser.JsoupParser;
 import de.schalter.sermononline.parser.NoDataFoundException;
-import de.schalter.sermononline.parser.SermonListElement;
+import de.schalter.sermononline.objects.SermonListElement;
 import de.schalter.sermononline.views.SermonView;
 
 public class ResultActivity extends AppCompatActivity {

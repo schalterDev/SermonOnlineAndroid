@@ -19,4 +19,8 @@
     <string name="available_downloads">Available downloads</string>
     <string name="fileNotExists">File does not exists (maybe deleted?)</string>
     <string name="deleted">Deleted</string>
+    <string name="redownload">Download again</string>
+    <string name="open_sermon_page">Open sermon page</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

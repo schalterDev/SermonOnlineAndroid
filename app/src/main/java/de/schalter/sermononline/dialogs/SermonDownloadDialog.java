@@ -3,9 +3,7 @@ package de.schalter.sermononline.dialogs;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -14,12 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.io.IOException;
 import java.util.HashMap;
 
-import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.Utils;
-import de.schalter.sermononline.parser.SermonElement;
+import de.schalter.sermononline.objects.SermonElement;
 
 /**
  * Dialog to show all possible downloads for one sermonPage
@@ -65,16 +61,7 @@ public class SermonDownloadDialog {
         modeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = sermonElement.data.get(0);
-                String link = linksArray[position];
-                int indexLastPoint = link.lastIndexOf(".");
-                String fileEnding = link.substring(indexLastPoint + 1);
-
-                long downloadId = Utils.downloadData(SermonDownloadDialog.this.activity, Uri.parse(link),
-                        title, title, title + "." + fileEnding);
-
-                DBHelper dbHelper = DBHelper.getInstance(SermonDownloadDialog.this.activity);
-                dbHelper.downloadStarted(sermonElement.sermonUrlPage, linksArray[position], sermonElement, downloadId);
+                Utils.downloadSermon(activity, sermonElement, linksArray[position]);
 
                 dialog.cancel();
             }

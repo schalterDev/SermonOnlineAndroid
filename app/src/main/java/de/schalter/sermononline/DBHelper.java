@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.schalter.sermononline.parser.SermonElement;
+import de.schalter.sermononline.objects.SermonElement;
 
 /**
  * Database to store downloads
@@ -73,6 +73,8 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param downloadKeyId downloadId from DownloadManager
      */
     public void downloadStarted(String downloadUrl, String downloadUrlFile, SermonElement sermonElement, long downloadKeyId) {
+        //First check if downloadUrl is already in the system
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
@@ -131,6 +133,26 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return downloadElements;
+    }
+
+    public SermonElement getSermonElement(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS,null);
+
+        SermonElement sermonElement = null;
+
+        if (cursor.moveToFirst()) {
+            try {
+                sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
+                sermonElement.id = cursor.getInt(0);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        cursor.close();
+
+        return sermonElement;
     }
 
     public String getRessourcePath(int id) {

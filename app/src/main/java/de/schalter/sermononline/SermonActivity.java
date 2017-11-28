@@ -22,7 +22,7 @@ import de.schalter.sermononline.dialogs.SermonDownloadDialog;
 import de.schalter.sermononline.dialogs.WaitDialog;
 import de.schalter.sermononline.parser.JsoupSermonParser;
 import de.schalter.sermononline.parser.NoDataFoundException;
-import de.schalter.sermononline.parser.SermonElement;
+import de.schalter.sermononline.objects.SermonElement;
 
 public class SermonActivity extends AppCompatActivity {
 
@@ -31,7 +31,6 @@ public class SermonActivity extends AppCompatActivity {
     private String url;
 
     private TableLayout table;
-    private FloatingActionButton floatingActionButton;
 
     private SermonElement sermonElement;
 
@@ -44,7 +43,7 @@ public class SermonActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         table = (TableLayout) findViewById(R.id.table_sermonData);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton_sermon);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton_sermon);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

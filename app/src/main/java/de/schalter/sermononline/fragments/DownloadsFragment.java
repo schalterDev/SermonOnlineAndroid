@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,8 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,7 @@ import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.Utils;
-import de.schalter.sermononline.parser.SermonElement;
+import de.schalter.sermononline.objects.SermonElement;
 import de.schalter.sermononline.views.SermonView;
 
 /**

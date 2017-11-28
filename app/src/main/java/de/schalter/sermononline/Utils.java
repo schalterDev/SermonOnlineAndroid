@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.schalter.sermononline.objects.SermonElement;
+
 /**
  * Utils to use everywhere
  * Created by martin on 22.11.17.
@@ -84,6 +86,18 @@ public class Utils {
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
         return downloadManager.enqueue(request);
+    }
+
+    public static void downloadSermon(Context context, SermonElement sermonElement, String link) {
+        String title = sermonElement.data.get(0);
+        int indexLastPoint = link.lastIndexOf(".");
+        String fileEnding = link.substring(indexLastPoint + 1);
+
+        long downloadId = Utils.downloadData(context, Uri.parse(link),
+                title, title, title + "." + fileEnding);
+
+        DBHelper dbHelper = DBHelper.getInstance(context);
+        dbHelper.downloadStarted(sermonElement.sermonUrlPage, link, sermonElement, downloadId);
     }
 
     public static void deleteDataFromDownloadManager(Context context, long downloadId) {

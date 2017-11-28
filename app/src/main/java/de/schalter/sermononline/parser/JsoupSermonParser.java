@@ -1,7 +1,5 @@
 package de.schalter.sermononline.parser;
 
-import android.util.SparseArray;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
+import de.schalter.sermononline.objects.SermonElement;
 
 /**
  * Parse a single sermon page

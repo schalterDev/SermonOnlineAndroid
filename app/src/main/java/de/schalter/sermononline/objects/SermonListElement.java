@@ -1,14 +1,13 @@
-package de.schalter.sermononline.parser;
-
-/**
- * storing all data important for displaying in listview
- * Created by martin on 21.11.17.
- */
+package de.schalter.sermononline.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * storing all data important for displaying in listview
+ * Created by martin on 21.11.17.
+ */
 public class SermonListElement {
 
     //order is title, author, passage, language, category, date/time, duration, pages

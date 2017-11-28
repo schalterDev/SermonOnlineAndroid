@@ -6,12 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.webkit.MimeTypeMap;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.net.URI;
@@ -21,7 +19,7 @@ import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.Utils;
-import de.schalter.sermononline.parser.SermonListElement;
+import de.schalter.sermononline.objects.SermonListElement;
 
 /**
  * View to be shown in the Sermon listview

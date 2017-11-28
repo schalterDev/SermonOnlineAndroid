@@ -1,4 +1,4 @@
-package de.schalter.sermononline.parser;
+package de.schalter.sermononline.objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,9 +24,13 @@ public class SermonElement implements Serializable {
     private static final String[] DURATIONS = {"duration", "dauer"};
     private static final String[] PAGES = {"pages", "seiten"};
 
+    //url of the page of the sermon
     public String sermonUrlPage;
 
+    //headers of the table of the page
     public List<String> headers;
+
+    //data of the table of the page
     public List<String> data;
 
     //<index in headers (or data), link (url)>
@@ -55,29 +59,29 @@ public class SermonElement implements Serializable {
         for(int i = 0; i < SermonListElement.SIZE; i++) {
             switch (i) {
                 case SermonListElement.TITLE:
-                    addToSermonElement(sermonListElement, TITLES);
+                    addToSermonListElement(sermonListElement, TITLES);
                     sermonListElement.links.put(i, sermonUrlPage);
                     break;
                 case SermonListElement.AUTHOR:
-                    addToSermonElement(sermonListElement, AUTHORS);
+                    addToSermonListElement(sermonListElement, AUTHORS);
                     break;
                 case SermonListElement.PASSAGE:
-                    addToSermonElement(sermonListElement, PASSAGES);
+                    addToSermonListElement(sermonListElement, PASSAGES);
                     break;
                 case SermonListElement.LANGUAGE:
-                    addToSermonElement(sermonListElement, LANGUAGES);
+                    addToSermonListElement(sermonListElement, LANGUAGES);
                     break;
                 case SermonListElement.CATEGORY:
-                    addToSermonElement(sermonListElement, CATEGORIES);
+                    addToSermonListElement(sermonListElement, CATEGORIES);
                     break;
                 case SermonListElement.DATE:
-                    addToSermonElement(sermonListElement, DATES);
+                    addToSermonListElement(sermonListElement, DATES);
                     break;
                 case SermonListElement.DURATION:
-                    addToSermonElement(sermonListElement, DURATIONS);
+                    addToSermonListElement(sermonListElement, DURATIONS);
                     break;
                 case SermonListElement.PAGES:
-                    addToSermonElement(sermonListElement, PAGES);
+                    addToSermonListElement(sermonListElement, PAGES);
                     break;
             }
         }
@@ -85,7 +89,13 @@ public class SermonElement implements Serializable {
         return sermonListElement;
     }
 
-    private void addToSermonElement(SermonListElement sermonListElement, String[] headerStrings) {
+    /**
+     * Searches for the data given in headerStrings and if the data is stored in this element it will
+     * be added to the sermonListView
+     * @param sermonListElement sermonListElement to add data
+     * @param headerStrings search for the column given in the array (multilanguage)
+     */
+    private void addToSermonListElement(SermonListElement sermonListElement, String[] headerStrings) {
         int index = Utils.indexOf(headers, headerStrings);
         if(index == -1) {
             sermonListElement.elementsText.add("");
