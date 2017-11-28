@@ -73,7 +73,21 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param downloadKeyId downloadId from DownloadManager
      */
     public void downloadStarted(String downloadUrl, String downloadUrlFile, SermonElement sermonElement, long downloadKeyId) {
+        boolean newEntry = true;
+
         //First check if downloadUrl is already in the system
+        SQLiteDatabase read = this.getReadableDatabase();
+        String checkIfExistsSql = "select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS +
+                " where " + KEY_DOWNLOADURL_FILE + " = " + downloadUrlFile;
+
+        Cursor cursor = read.rawQuery(checkIfExistsSql,null);
+
+        if (cursor.moveToFirst()) {
+            String url = cursor.getString(0);
+            if(url != null && !url.equals("")) {
+                newEntry = false;
+            }
+        }
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -86,8 +100,13 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         values.put(KEY_DOWNLOAD_ID, downloadKeyId);
 
-        // Inserting Row
-        db.insert(T_DOWNLOADS, null, values);
+        if(newEntry) {
+            // Inserting Row
+            db.insert(T_DOWNLOADS, null, values);
+        } else {
+            //updating row
+            db.update(T_DOWNLOADS, values, KEY_DOWNLOADURL_FILE + " = " + downloadUrlFile, null);
+        }
     }
 
     /**
@@ -137,14 +156,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public SermonElement getSermonElement(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS,null);
+        Cursor cursor = db.rawQuery("select " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id,null);
 
         SermonElement sermonElement = null;
 
         if (cursor.moveToFirst()) {
             try {
-                sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
-                sermonElement.id = cursor.getInt(0);
+                sermonElement = (SermonElement) Utils.fromString(cursor.getString(0));
+                sermonElement.id = id;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -160,8 +179,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select " + KEY_PATH + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
 
         if(cursor.moveToFirst()) {
-            return cursor.getString(0);
+            String path = cursor.getString(0);
+            cursor.close();
+            return path;
         }
+
+        cursor.close();
 
         return null;
     }
@@ -176,8 +199,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + sermonId, null);
 
         if(cursor.moveToFirst()) {
-            return cursor.getLong(0);
+            long downloadId = cursor.getLong(0);
+            cursor.close();
+            return downloadId;
         }
+
+        cursor.close();
 
         return -1;
     }
@@ -187,8 +214,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("select " + column + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
 
         if(cursor.moveToFirst()) {
-            return cursor.getString(0);
+            String columnResult = cursor.getString(0);
+            cursor.close();
+            return columnResult;
         }
+
+        cursor.close();
 
         return null;
     }
