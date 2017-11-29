@@ -34,7 +34,7 @@ public class SermonActivity extends AppCompatActivity {
     private String url;
 
     private TableLayout table;
-    private SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_sermon);
+    private SwipeRefreshLayout swipeRefreshLayout;
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton floatingActionButton;
 
@@ -48,6 +48,7 @@ public class SermonActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        swipeRefreshLayout = findViewById(R.id.refresh_sermon);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
