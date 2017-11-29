@@ -1,4 +1,4 @@
-package de.schalter.sermononline;
+package de.schalter.sermononline.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;

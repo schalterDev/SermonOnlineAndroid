@@ -25,6 +25,11 @@
     <string name="delete">Delete</string>
     <string name="finished">Finished</string>
     <string name="no_more_data">No more data to load</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">general</string>
+    <string name="pref_title_ads">Show ads</string>
+
+    <!-- Strings related to Settings -->
 
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-2270371481189370/1247044476</string>
 </resources>

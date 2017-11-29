@@ -41,10 +41,10 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        final EditText editText = (EditText) rootView.findViewById(R.id.search_editText);
-        spinnerLanguage = (Spinner) rootView.findViewById(R.id.spinner_language);
+        final EditText editText = rootView.findViewById(R.id.search_editText);
+        spinnerLanguage = rootView.findViewById(R.id.spinner_language);
 
-        Button searchButton = (Button) rootView.findViewById(R.id.search_btn);
+        Button searchButton = rootView.findViewById(R.id.search_btn);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
