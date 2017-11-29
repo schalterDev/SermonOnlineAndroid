@@ -1,5 +1,6 @@
 package de.schalter.sermononline.fragments;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.Utils;
+import de.schalter.sermononline.dialogs.SermonNotFoundDialog;
 import de.schalter.sermononline.objects.SermonElement;
 import de.schalter.sermononline.views.SermonView;
 
@@ -131,7 +134,13 @@ public class DownloadsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!selectionMode) {
                     SermonView sermonView = (SermonView) view;
-                    sermonView.clickOpenRessource((MainActivity) getActivity());
+                    try {
+                        sermonView.clickOpenRessource((MainActivity) getActivity());
+                    } catch (FileNotFoundException | ActivityNotFoundException e) {
+                        e.printStackTrace();
+                        SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(getActivity(), sermonView.getSermonId());
+                        sermonNotFoundDialog.show();
+                    }
                 } else {
                     if(selected.contains(position)) {
                         removeSelection((SermonView) view, position);
@@ -192,25 +201,36 @@ public class DownloadsFragment extends Fragment {
             @Override
             public void run() {
             DBHelper dbHelper = DBHelper.getInstance(context);
-                List<SermonElement> downloads = dbHelper.getAllDownloads();
-                final List<SermonView> views = new ArrayList<>();
+            List<SermonElement> downloads = dbHelper.getAllDownloads();
+            final List<SermonView> views = new ArrayList<>();
 
-                for(SermonElement download : downloads) {
-                    SermonView downloadView = new SermonView(getActivity(), download.toSermonListElement());
-                    downloadView.setId(download.id);
-                    views.add(downloadView);
+            for(SermonElement download : downloads) {
+                String path = dbHelper.getRessourcePath(download.id);
+                String fileEnding = null;
+                if(path != null) {
+                    fileEnding = Utils.getFileExtension(path);
                 }
 
-                Utils.runOnUiThread(context, new Runnable() {
-                    @Override
-                    public void run() {
-                        if(adapter != null) {
-                            adapter.clear();
-                            adapter.addAll(views);
-                            adapter.notifyDataSetChanged();
-                        }
+                SermonView downloadView = new SermonView(getActivity(), download.toSermonListElement());
+                downloadView.setId(download.id);
+
+                if(fileEnding != null) {
+                    downloadView.addToTitle(" (" + fileEnding + ")");
+                }
+
+                views.add(downloadView);
+            }
+
+            Utils.runOnUiThread(context, new Runnable() {
+                @Override
+                public void run() {
+                    if(adapter != null) {
+                        adapter.clear();
+                        adapter.addAll(views);
+                        adapter.notifyDataSetChanged();
                     }
-                });
+                }
+            });
             }
         });
         background.start();

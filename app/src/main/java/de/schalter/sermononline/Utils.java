@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -92,6 +93,11 @@ public class Utils {
 
     public static void downloadSermon(Context context, SermonElement sermonElement, String link) {
         String title = sermonElement.data.get(0);
+
+        //"?" is not allowed in fileName
+        while(title.contains("?"))
+            title = title.replace("?", "");
+
         int indexLastPoint = link.lastIndexOf(".");
         String fileEnding = link.substring(indexLastPoint + 1);
 
@@ -107,6 +113,14 @@ public class Utils {
 
         if (downloadManager != null) {
             downloadManager.remove(downloadId);
+        }
+    }
+
+    public static void openWithDownloadManager(Context context, long downloadId) throws FileNotFoundException {
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+
+        if (downloadManager != null) {
+            downloadManager.openDownloadedFile(downloadId);
         }
     }
 

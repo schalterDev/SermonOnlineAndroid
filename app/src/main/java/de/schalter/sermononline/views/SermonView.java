@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URI;
 
 import de.schalter.sermononline.DBHelper;
@@ -33,6 +34,8 @@ public class SermonView extends RelativeLayout {
     private Activity activity;
     private int id;
 
+    private TextView title;
+
     public SermonView(Activity activity, SermonListElement sermonListElement) {
         super(activity);
         this.activity = activity;
@@ -41,7 +44,7 @@ public class SermonView extends RelativeLayout {
         mInflater.inflate(R.layout.sermon_view, this , true);
 
         TextView author = (TextView) findViewById(R.id.sermon_author);
-        TextView title = (TextView) findViewById(R.id.sermon_title);
+        title = (TextView) findViewById(R.id.sermon_title);
         TextView category = (TextView) findViewById(R.id.sermon_categorie);
         TextView bible = (TextView) findViewById(R.id.sermon_bible);
         TextView date = (TextView) findViewById(R.id.sermon_date);
@@ -55,6 +58,10 @@ public class SermonView extends RelativeLayout {
         duration.setText(sermonListElement.elementsText.get(SermonListElement.DURATION));
 
         url = sermonListElement.links.get(0);
+    }
+
+    public void addToTitle(String string) {
+        title.setText(title.getText() + string);
     }
 
     public void setSelection(boolean selected) {
@@ -81,12 +88,17 @@ public class SermonView extends RelativeLayout {
         activity.startActivity(intent);
     }
 
-    public void clickOpenRessource(MainActivity activity) {
+    public void clickOpenRessource(MainActivity activity) throws FileNotFoundException, ActivityNotFoundException {
         DBHelper dbHelper = DBHelper.getInstance(getContext());
+
+        /*
+        long downloadId = dbHelper.getDownloadId(id);
+        Utils.openWithDownloadManager(activity, downloadId);
+        */
         String path = dbHelper.getRessourcePath(id);
 
         //Check if path exists
-        if(path == null ||  !(new File(URI.create(path)).exists())) {
+        if (path == null || !(new File(URI.create(path)).exists())) {
             //activity.snackbar(R.string.fileNotExists);
             SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(activity, id);
             sermonNotFoundDialog.show();
@@ -96,12 +108,9 @@ public class SermonView extends RelativeLayout {
             String mimeType = myMime.getMimeTypeFromExtension(Utils.getFileExtension(path));
             newIntent.setDataAndType(Uri.parse(path), mimeType);
             newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                getContext().startActivity(newIntent);
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-            }
+            getContext().startActivity(newIntent);
         }
+
     }
 
 }
