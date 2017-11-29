@@ -1,6 +1,6 @@
 package de.schalter.sermononline;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -20,6 +20,7 @@ import com.google.android.gms.ads.AdView;
 
 import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
+import de.schalter.sermononline.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            this.startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 

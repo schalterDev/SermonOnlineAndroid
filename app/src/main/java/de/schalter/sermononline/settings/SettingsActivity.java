@@ -12,14 +12,23 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import de.schalter.sermononline.R;
@@ -36,6 +45,8 @@ import de.schalter.sermononline.R;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -58,6 +69,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
+
+    private static boolean isSimplePreferences(Context context) {
+        return ALWAYS_SIMPLE_PREFS
+                || (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+                || !isXLargeTablet(context);
     }
 
     /**
@@ -110,12 +127,56 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return super.onMenuItemSelected(featureId, item);
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        Toolbar bar;
+
+        LinearLayout root = (LinearLayout) findViewById(android.R.id.list).getParent().getParent().getParent();
+        bar = (Toolbar) LayoutInflater.from(this).inflate(R.layout.settings_toolbar, root, false);
+        root.addView(bar, 0); // insert at top
+
+        bar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        setupSimplePreferencesScreen();
+    }
+
+    /**
+     * Shows the simplified settings UI if the device configuration if the
+     * device configuration dictates that a simplified, single-pane UI should be
+     * shown.
+     */
+    private void setupSimplePreferencesScreen() {
+        if (!isSimplePreferences(this)) {
+            return;
+        }
+
+        // In the simplified UI, fragments are not used at all and we instead
+        // use the older PreferenceActivity APIs.
+
+        // Add 'general' preferences.
+        addPreferencesFromResource(R.xml.pref_general);
+
+
+        // Add 'notifications' preferences, and a corresponding header.
+       /* PreferenceCategory fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(getResources().getString(R.string.pref_notifications));
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_notification);*/
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
+        return isXLargeTablet(this) && !isSimplePreferences(this);
     }
 
     /**
@@ -124,7 +185,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
+        if(!isSimplePreferences(this))
+            loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
     /**
