@@ -2,7 +2,6 @@ package de.schalter.sermononline;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,12 +19,15 @@ import com.google.android.gms.ads.AdView;
 
 import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
+import de.schalter.sermononline.settings.Settings;
 import de.schalter.sermononline.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private final int SEARCH = 0;
     private final int DOWNLOADS = 1;
+
+    private Settings settings;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -48,14 +50,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
         Settings.initSettings(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = findViewById(R.id.main_content);
-        relativeLayout = (RelativeLayout) findViewById(R.id.main_content);
+        relativeLayout = findViewById(R.id.main_content);
+        relativeLayout = findViewById(R.id.main_content);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
