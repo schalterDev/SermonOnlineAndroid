@@ -1,8 +1,8 @@
 package de.schalter.sermononline;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,7 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.RelativeLayout;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
@@ -37,17 +40,21 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private CoordinatorLayout coordinatorLayout;
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        AdView mAdView = findViewById(R.id.adView_main);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
+        relativeLayout = (RelativeLayout) findViewById(R.id.main_content);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -102,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void snackbar(int message) {
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     /**
