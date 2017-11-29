@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 public class Settings {
 
     public static final String SHOW_ADS = "showAds";
-    public static final boolean SHOW_ADS_DEFAULT = true;
+    public static final boolean SHOW_ADS_DEFAULT = false;
 
     private static SharedPreferences settings;
 

@@ -32,4 +32,5 @@
     <!-- Strings related to Settings -->
 
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-2270371481189370/1247044476</string>
+    <string name="show_ads">Show Ads</string>
 </resources>
