@@ -114,7 +114,7 @@ public class DownloadsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_downloads, container, false);
         toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_download);
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh_download);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -124,7 +124,7 @@ public class DownloadsFragment extends Fragment {
             }
         });
 
-        ListView listView = (ListView) rootView.findViewById(R.id.list_downloads);
+        ListView listView = rootView.findViewById(R.id.list_downloads);
 
         List<SermonView> views = new ArrayList<>();
         adapter = new ListAdapter(context, views);

@@ -34,7 +34,7 @@ public class SermonActivity extends AppCompatActivity {
     private String url;
 
     private TableLayout table;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_sermon);
     private CoordinatorLayout coordinatorLayout;
     private FloatingActionButton floatingActionButton;
 
@@ -44,11 +44,10 @@ public class SermonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sermon);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_sermon);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -56,10 +55,10 @@ public class SermonActivity extends AppCompatActivity {
             }
         });
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_sermon);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingButton_sermon);
+        coordinatorLayout = findViewById(R.id.coordinator_sermon);
+        floatingActionButton = findViewById(R.id.floatingButton_sermon);
 
-        table = (TableLayout) findViewById(R.id.table_sermonData);
+        table = findViewById(R.id.table_sermonData);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

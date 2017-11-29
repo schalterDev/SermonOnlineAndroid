@@ -54,7 +54,7 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Get extras
@@ -65,7 +65,7 @@ public class ResultActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_result);
+        swipeRefreshLayout = findViewById(R.id.refresh_result);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,8 +74,8 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_result);
-        listViewContent = (ListView) findViewById(R.id.listView_content);
+        coordinatorLayout = findViewById(R.id.coordinator_result);
+        listViewContent = findViewById(R.id.listView_content);
         listViewContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
