@@ -21,7 +21,7 @@ import java.util.List;
 
 import de.schalter.sermononline.objects.SermonListElement;
 
-public class JsoupParser {
+public class JsoupResultParser {
 
     private final int DATA_TABLE_COUNT = 2;
     private final int HEADERS_TD_COUNT = 1;
