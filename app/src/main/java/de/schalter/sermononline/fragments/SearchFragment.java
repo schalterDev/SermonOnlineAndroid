@@ -2,6 +2,7 @@ package de.schalter.sermononline.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,7 @@ public class SearchFragment extends Fragment {
      * Loads the website and setups spinners
      */
     private void setupSpinners() {
-        snackbar(R.string.connecting);
+        snackbar(R.string.connecting, Snackbar.LENGTH_INDEFINITE);
 
         Thread background = new Thread(new Runnable() {
             @Override
@@ -100,7 +101,7 @@ public class SearchFragment extends Fragment {
                     JsoupStartPageParser parser = new JsoupStartPageParser();
                     parser.connect(searchUrl);
 
-                    snackBarOnUI(R.string.parsing);
+                    snackBarOnUI(R.string.parsing, Snackbar.LENGTH_INDEFINITE);
                     parser.parse();
 
                     languages = parser.getLanguages();
@@ -113,26 +114,60 @@ public class SearchFragment extends Fragment {
 
                     downloadFinished = true;
 
-                    snackBarOnUI(R.string.finished);
+                    snackBarOnUI(R.string.finished, Snackbar.LENGTH_SHORT);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    snackBarOnUIWithAction(R.string.network_error, Snackbar.LENGTH_INDEFINITE,
+                            R.string.retry, new Runnable() {
+                                @Override
+                                public void run() {
+                                    Utils.runOnUiThread(getContext(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setupSpinners();
+                                        }
+                                    });
+                                }
+                            });
                 } catch (NoDataFoundException e) {
                     e.printStackTrace();
+                    snackBarOnUIWithAction(R.string.data_error, Snackbar.LENGTH_INDEFINITE,
+                            R.string.retry, new Runnable() {
+                                @Override
+                                public void run() {
+                                    Utils.runOnUiThread(getContext(), new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setupSpinners();
+                                        }
+                                    });
+                                }
+                            });
                 }
             }
         }); background.start();
     }
 
-    public void snackbar(int message) {
-        ((MainActivity) getActivity()).snackbar(message);
+    private void snackbar(int message, int duration) {
+        ((MainActivity) getActivity()).snackbar(message, duration);
     }
 
-    public void snackBarOnUI(final int mesasge) {
+    private void snackBarOnUI(final int message, final int duration) {
         final MainActivity activity = (MainActivity) getActivity();
         Utils.runOnUiThread(activity, new Runnable() {
             @Override
             public void run() {
-                activity.snackbar(mesasge);
+                activity.snackbar(message, duration);
+            }
+        });
+    }
+
+    private void snackBarOnUIWithAction(final int message, final int duration, final int messageAction, final Runnable action) {
+        final MainActivity activity = (MainActivity) getActivity();
+        Utils.runOnUiThread(activity, new Runnable() {
+            @Override
+            public void run() {
+                activity.snackbarWithAction(message, duration, messageAction, action);
             }
         });
     }

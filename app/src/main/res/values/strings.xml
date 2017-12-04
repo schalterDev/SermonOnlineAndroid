@@ -31,6 +31,7 @@
     <string name="author">Author</string>
     <string name="german">German</string>
     <string name="english">English</string>
+    <string name="retry">Retry</string>
 
     <!-- Strings related to Settings -->
 

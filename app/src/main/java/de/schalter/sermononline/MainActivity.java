@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
@@ -104,6 +105,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void snackbar(int message) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void snackbar(int message, int duration) {
+        Snackbar.make(coordinatorLayout, message, duration).show();
+    }
+
+    public void snackbarWithAction(int message, int duration, int actionText, final Runnable action) {
+        Snackbar.make(coordinatorLayout, message, duration).setAction(actionText, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                action.run();
+            }
+        }).show();
     }
 
     /**
