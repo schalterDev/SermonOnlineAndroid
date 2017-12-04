@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.schalter.sermononline.dialogs.ErrorDialog;
+import de.schalter.sermononline.objects.SermonListElement;
 import de.schalter.sermononline.parser.JsoupResultParser;
 import de.schalter.sermononline.parser.NoDataFoundException;
-import de.schalter.sermononline.objects.SermonListElement;
 import de.schalter.sermononline.settings.Settings;
 import de.schalter.sermononline.views.SermonView;
 

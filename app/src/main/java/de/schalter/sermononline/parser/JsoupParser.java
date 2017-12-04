@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import de.schalter.sermononline.objects.SermonElement;
-
 /**
  * Created by martin on 30.11.17.
  */
