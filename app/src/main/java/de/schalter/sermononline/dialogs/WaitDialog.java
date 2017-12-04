@@ -1,14 +1,12 @@
 package de.schalter.sermononline.dialogs;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import de.schalter.sermononline.R;
-import de.schalter.sermononline.ResultActivity;
 import de.schalter.sermononline.Utils;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;

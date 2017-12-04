@@ -22,10 +22,9 @@ import java.util.HashMap;
 
 import de.schalter.sermononline.dialogs.ErrorDialog;
 import de.schalter.sermononline.dialogs.SermonDownloadDialog;
-import de.schalter.sermononline.dialogs.WaitDialog;
+import de.schalter.sermononline.objects.SermonElement;
 import de.schalter.sermononline.parser.JsoupSermonParser;
 import de.schalter.sermononline.parser.NoDataFoundException;
-import de.schalter.sermononline.objects.SermonElement;
 
 public class SermonActivity extends AppCompatActivity {
 
