@@ -93,6 +93,8 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
 
+        read.close();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
@@ -111,6 +113,8 @@ public class DBHelper extends SQLiteOpenHelper {
             //updating row
             db.update(T_DOWNLOADS, values, KEY_DOWNLOADURL_FILE + " = " + downloadUrlFileSql, null);
         }
+
+        db.close();
     }
 
     /**
@@ -126,6 +130,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // update Row
         db.update(T_DOWNLOADS, cv, KEY_DOWNLOAD_ID + "=" + downloadKeyId, null);
+
+        db.close();
     }
 
     /**
@@ -135,7 +141,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<SermonElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
-                + " ORDER BY " + KEY_ID,null);
+                + " ORDER BY " + KEY_ID + " DESC",null);
 
         List<SermonElement> downloadElements = new ArrayList<>();
 
@@ -154,6 +160,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return downloadElements;
     }
@@ -174,6 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return sermonElement;
     }
@@ -189,6 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return null;
     }
@@ -196,6 +205,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removeDownload(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(T_DOWNLOADS, KEY_ID + " = " + id, null);
+        db.close();
     }
 
     public long getDownloadId(int sermonId) {
@@ -209,6 +219,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return -1;
     }
@@ -224,6 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return null;
     }
@@ -244,5 +256,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // update Row
         db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
+
+        db.close();
     }
 }

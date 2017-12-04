@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.schalter.sermononline.dialogs.ErrorDialog;
-import de.schalter.sermononline.dialogs.WaitDialog;
-import de.schalter.sermononline.parser.JsoupParser;
-import de.schalter.sermononline.parser.NoDataFoundException;
 import de.schalter.sermononline.objects.SermonListElement;
+import de.schalter.sermononline.parser.JsoupResultParser;
+import de.schalter.sermononline.parser.NoDataFoundException;
+import de.schalter.sermononline.settings.Settings;
 import de.schalter.sermononline.views.SermonView;
 
 public class ResultActivity extends AppCompatActivity {
@@ -38,6 +38,9 @@ public class ResultActivity extends AppCompatActivity {
 
     static public final String SEARCHTEXT = "search";
     static public final String LANGUAGE = "language";
+    static public final String CATEGORY = "category";
+    static public final String AUTHOR = "author";
+    static public final String MEDIATYPES = "mediaTypes";
 
     private ListView listViewContent;
     private ListAdapter adapter;
@@ -46,6 +49,9 @@ public class ResultActivity extends AppCompatActivity {
 
     private String searchText;
     private int language;
+    private int category;
+    private int author;
+    private int mediaTypes;
     private int lastIndex;
     private boolean loading;
     private boolean error;
@@ -61,6 +67,9 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         searchText = intent.getStringExtra(SEARCHTEXT);
         language = intent.getIntExtra(LANGUAGE, 0);
+        category = intent.getIntExtra(CATEGORY, 0);
+        author = intent.getIntExtra(AUTHOR, 0);
+        mediaTypes = intent.getIntExtra(MEDIATYPES, 0);
         getSupportActionBar().setTitle(searchText);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,7 +78,7 @@ public class ResultActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadDataAsynchron(searchUrl(searchText, "de", language, 1), true);
+                loadDataAsynchron(searchUrl(searchText, Settings.getSystemLanguageCode(), 1), true);
                 lastIndex = COUNTELEMENTS;
             }
         });
@@ -139,14 +148,14 @@ public class ResultActivity extends AppCompatActivity {
 
         listViewContent.setAdapter(adapter);
 
-        String url = searchUrl(searchText, "de", language, 1);
+        String url = searchUrl(searchText, Settings.getSystemLanguageCode(), 1);
         lastIndex = COUNTELEMENTS;
         loadDataAsynchron(url, true);
     }
 
     private void loadNewData() {
         loading = true;
-        String url = searchUrl(searchText, "de", language, lastIndex + 1);
+        String url = searchUrl(searchText, Settings.getSystemLanguageCode(), lastIndex + 1);
         lastIndex += COUNTELEMENTS;
         loadDataAsynchron(url, false);
     }
@@ -155,17 +164,17 @@ public class ResultActivity extends AppCompatActivity {
      * cenerates a url with search request and starts the resultActivity
      * @param searchText searchText
      */
-    private String searchUrl(String searchText, String language, int languageCode, int startIndex) {
+    private String searchUrl(String searchText, String languageString, int startIndex) {
         String searchEncoded = Uri.encode(searchText);
         String url = "http://sermon-online.com/search.pl?" +
-                "lang=" + language +
+                "lang=" + languageString +
                 "&id=0" +
                 "&start=" + startIndex +
                 "&searchstring=" + searchEncoded +
-                "&author=0" +
-                "&language=" + languageCode +
-                "&category=0" +
-                "&mediatype=0" +
+                "&author=" + author +
+                "&language=" + language +
+                "&category=" + category +
+                "&mediatype=" + mediaTypes +
                 "&order=12" +
                 "&count=" + COUNTELEMENTS +
                 "&x=0" +
@@ -191,7 +200,7 @@ public class ResultActivity extends AppCompatActivity {
 
                 Looper.prepare();
 
-                JsoupParser parser = new JsoupParser();
+                JsoupResultParser parser = new JsoupResultParser();
                 try {
                     parser.connect(url);
 

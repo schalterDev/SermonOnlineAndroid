@@ -5,12 +5,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import de.schalter.sermononline.objects.SermonElement;
 
 /**
@@ -18,11 +12,9 @@ import de.schalter.sermononline.objects.SermonElement;
  * Created by martin on 22.11.17.
  */
 
-public class JsoupSermonParser {
+public class JsoupSermonParser extends JsoupParser {
 
     private final int DATA_TABLE_COUNT = 2;
-
-    private String html;
 
     private SermonElement sermonElement;
 
@@ -30,38 +22,11 @@ public class JsoupSermonParser {
         sermonElement = new SermonElement();
     }
 
-    /**
-     * Connect to the given url and download the html
-     * @param urlString url as String
-     * @throws IOException when the url is not an URL
-     */
-    public void connect(String urlString) throws IOException {
-        sermonElement.sermonUrlPage = urlString;
-
-        URL url = new URL(urlString);
-        HttpURLConnection ucon = (HttpURLConnection) url.openConnection();
-
-        ucon.setRequestProperty("User-Agent", "Mozilla/5.0...");
-
-        InputStream is = ucon.getInputStream();
-        BufferedInputStream bis = new BufferedInputStream(is);
-        /*
-         * Read bytes to the Buffer until there is nothing more to read(-1).
-         */
-        byte[] contents = new byte[1024];
-
-        int bytesRead;
-        html = "";
-        while( (bytesRead = bis.read(contents)) != -1){
-            html += new String(contents, 0, bytesRead);
-        }
-    }
-
-    /**
-     * parse the downloaded html file
-     * @throws NoDataFoundException when the downloaded html is empty (or not downloaded) or there are no results
-     */
+    @Override
     public void parse() throws NoDataFoundException {
+        if(html == null || html.equals(""))
+            throw new NoDataFoundException();
+
         Document doc = Jsoup.parse(html);
 
         try {
@@ -76,6 +41,7 @@ public class JsoupSermonParser {
     }
 
     private void parseData(Element table) {
+        sermonElement.sermonUrlPage = url;
 
         Elements rows = table.select("> tbody > tr");
         for(Element row : rows) {

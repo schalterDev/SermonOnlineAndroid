@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Locale;
+
 /**
  * Created by martin on 29.11.17.
  */
@@ -31,4 +33,12 @@ public class Settings {
         settings = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static String getSystemLanguageCode() {
+        String language = Locale.getDefault().getLanguage();
+        if(language.equals("de")) {
+            return "de";
+        } else {
+            return "en";
+        }
+    }
 }

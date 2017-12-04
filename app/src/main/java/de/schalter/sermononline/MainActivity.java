@@ -2,6 +2,7 @@ package de.schalter.sermononline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -122,6 +123,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void snackbar(int message) {
         Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void snackbar(int message, int duration) {
+        Snackbar.make(coordinatorLayout, message, duration).show();
+    }
+
+    public void snackbarWithAction(int message, int duration, int actionText, final Runnable action) {
+        Snackbar.make(coordinatorLayout, message, duration).setAction(actionText, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                action.run();
+            }
+        }).show();
     }
 
     /**
