@@ -36,4 +36,7 @@
     <string name="author">Autor</string>
     <string name="retry">Wiederholen</string>
     <string name="download_started">Download läuft (siehe Benachrichtigung)</string>
+    <string name="show_ads">Zeige Werbung</string>
+    <string name="activate_ads">Werbung aktivieren</string>
+    <string name="show_ads_message">Wenn du den Entwickler unterstützen möchtest kannst du ein kleines Werbebanner aktivieren (kann in den Einstellungen geändert werden)</string>
 </resources>
