@@ -32,6 +32,7 @@
     <string name="german">German</string>
     <string name="english">English</string>
     <string name="retry">Retry</string>
+    <string name="download_started">Download started (see notification)</string>
 
     <!-- Strings related to Settings -->
 

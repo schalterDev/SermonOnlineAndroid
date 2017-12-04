@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,8 @@ import android.widget.ListView;
 
 import java.util.HashMap;
 
+import de.schalter.sermononline.R;
+import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.Utils;
 import de.schalter.sermononline.objects.SermonElement;
 
@@ -27,7 +30,7 @@ public class SermonDownloadDialog {
     private AlertDialog.Builder builder;
     private Dialog dialog;
 
-    private Activity activity;
+    private SermonActivity activity;
     private final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 0;
 
     /**
@@ -37,7 +40,7 @@ public class SermonDownloadDialog {
      * @param links Links with their description. HasMap<Description, link>
      * @param sermonElement sermonElement
      */
-    public SermonDownloadDialog(final Activity activity, int titleRessource, final HashMap<String, String> links, final SermonElement sermonElement) {
+    public SermonDownloadDialog(final SermonActivity activity, int titleRessource, final HashMap<String, String> links, final SermonElement sermonElement) {
         this.activity = activity;
 
         permission();
@@ -62,6 +65,7 @@ public class SermonDownloadDialog {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Utils.downloadSermon(activity, sermonElement, linksArray[position]);
+                activity.snackbarOnUI(R.string.download_started, Snackbar.LENGTH_LONG);
 
                 dialog.cancel();
             }
