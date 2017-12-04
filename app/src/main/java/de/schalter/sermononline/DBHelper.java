@@ -32,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_DOWNLOAD_ID = "downloadId";
 
     private static DBHelper instance;
+    private SQLiteDatabase db;
 
     private Context context;
 
@@ -59,6 +60,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");";
 
         db.execSQL(sqlCreate);
+
+        db.close();
     }
 
     @Override
@@ -77,14 +80,14 @@ public class DBHelper extends SQLiteOpenHelper {
         boolean newEntry = true;
 
         //First check if downloadUrl is already in the system
-        SQLiteDatabase read = this.getReadableDatabase();
+        db = this.getReadableDatabase();
 
         String downloadUrlFileSql = DatabaseUtils.sqlEscapeString(downloadUrlFile);
 
         String checkIfExistsSql = "select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS +
                 " where " + KEY_DOWNLOADURL_FILE + " = " + downloadUrlFileSql;
 
-        Cursor cursor = read.rawQuery(checkIfExistsSql,null);
+        Cursor cursor = db.rawQuery(checkIfExistsSql,null);
 
         if (cursor.moveToFirst()) {
             String url = cursor.getString(0);
@@ -93,7 +96,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
         values.put(KEY_DOWNLOADURL_FILE, downloadUrlFile);
@@ -111,6 +114,8 @@ public class DBHelper extends SQLiteOpenHelper {
             //updating row
             db.update(T_DOWNLOADS, values, KEY_DOWNLOADURL_FILE + " = " + downloadUrlFileSql, null);
         }
+
+        db.close();
     }
 
     /**
@@ -119,13 +124,15 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param path filePath on the local file system
      */
     public void downloadCompleted(long downloadKeyId, String path) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
         cv.put(KEY_PATH, path);
 
         // update Row
         db.update(T_DOWNLOADS, cv, KEY_DOWNLOAD_ID + "=" + downloadKeyId, null);
+
+        db.close();
     }
 
     /**
@@ -133,7 +140,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return all downloads
      */
     public List<SermonElement> getAllDownloads() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
                 + " ORDER BY " + KEY_ID + " DESC",null);
 
@@ -154,12 +161,13 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return downloadElements;
     }
 
     public SermonElement getSermonElement(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id,null);
 
         SermonElement sermonElement = null;
@@ -174,12 +182,13 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return sermonElement;
     }
 
     public String getRessourcePath(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_PATH + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
 
         if(cursor.moveToFirst()) {
@@ -189,17 +198,19 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return null;
     }
 
     public void removeDownload(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         db.delete(T_DOWNLOADS, KEY_ID + " = " + id, null);
+        db.close();
     }
 
     public long getDownloadId(int sermonId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_DOWNLOAD_ID + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + sermonId, null);
 
         if(cursor.moveToFirst()) {
@@ -209,12 +220,13 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return -1;
     }
 
     private String getColumn(String column, int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + column + " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id, null);
 
         if(cursor.moveToFirst()) {
@@ -224,6 +236,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return null;
     }
@@ -237,12 +250,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updateDownloadManagerId(int id, long downloadManagerId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
         cv.put(KEY_DOWNLOAD_ID, downloadManagerId);
 
         // update Row
         db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
+        db.close();
     }
 }
