@@ -135,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<SermonElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + " from " + T_DOWNLOADS
-                + " ORDER BY " + KEY_ID,null);
+                + " ORDER BY " + KEY_ID + " DESC",null);
 
         List<SermonElement> downloadElements = new ArrayList<>();
 
