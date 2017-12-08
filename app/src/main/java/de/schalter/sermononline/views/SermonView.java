@@ -5,9 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
-import android.webkit.MimeTypeMap;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.MainActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.SermonActivity;
-import de.schalter.sermononline.Utils;
 import de.schalter.sermononline.dialogs.SermonNotFoundDialog;
 import de.schalter.sermononline.objects.SermonListElement;
 
@@ -31,16 +29,16 @@ import de.schalter.sermononline.objects.SermonListElement;
 public class SermonView extends RelativeLayout {
 
     private String url;
-    private Activity activity;
+    private Context context;
     private int id;
 
     private TextView title;
 
-    public SermonView(Activity activity, SermonListElement sermonListElement) {
-        super(activity);
-        this.activity = activity;
+    public SermonView(Context context, SermonListElement sermonListElement) {
+        super(context);
+        this.context = context;
 
-        LayoutInflater mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mInflater.inflate(R.layout.sermon_view, this , true);
 
         TextView author = (TextView) findViewById(R.id.sermon_author);
@@ -83,9 +81,9 @@ public class SermonView extends RelativeLayout {
      * starts a new SermonActivity
      */
     public void clickStartActivity() {
-        Intent intent = new Intent(activity, SermonActivity.class);
+        Intent intent = new Intent(context, SermonActivity.class);
         intent.putExtra(SermonActivity.URL, url);
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     public void clickOpenRessource(MainActivity activity) throws FileNotFoundException, ActivityNotFoundException {
@@ -93,21 +91,20 @@ public class SermonView extends RelativeLayout {
 
         /*
         long downloadId = dbHelper.getDownloadId(id);
-        Utils.openWithDownloadManager(activity, downloadId);
+        Utils.openWithDownloadManager(context, downloadId);
         */
         String path = dbHelper.getRessourcePath(id);
 
         //Check if path exists
         if (path == null || !(new File(URI.create(path)).exists())) {
-            //activity.snackbar(R.string.fileNotExists);
             SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(activity, id);
             sermonNotFoundDialog.show();
         } else {
-            MimeTypeMap myMime = MimeTypeMap.getSingleton();
-            Intent newIntent = new Intent(Intent.ACTION_VIEW);
-            String mimeType = myMime.getMimeTypeFromExtension(Utils.getFileExtension(path));
-            newIntent.setDataAndType(Uri.parse(path), mimeType);
+            Intent newIntent = new Intent(Intent.ACTION_VIEW,
+                    FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".de.schalter.sermononline",
+                            new File(URI.create(path))));
             newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             getContext().startActivity(newIntent);
         }
 
