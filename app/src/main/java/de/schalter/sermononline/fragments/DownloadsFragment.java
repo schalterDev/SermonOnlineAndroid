@@ -211,7 +211,7 @@ public class DownloadsFragment extends Fragment {
                     fileEnding = Utils.getFileExtension(path);
                 }
 
-                SermonView downloadView = new SermonView(getActivity(), download.toSermonListElement());
+                SermonView downloadView = new SermonView(context, download.toSermonListElement());
                 downloadView.setId(download.id);
 
                 if(fileEnding != null) {

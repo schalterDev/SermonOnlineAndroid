@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +45,7 @@ public class SearchFragment extends Fragment {
     private List<String> sortedCategories;
     private List<String> sortedAuthors;
 
+    private EditText editText;
     private Spinner spinnerLanguage;
     private Spinner spinnerCategory;
     private Spinner spinnerAuthor;
@@ -63,7 +66,30 @@ public class SearchFragment extends Fragment {
 
         downloadFinished = false;
 
-        final EditText editText = rootView.findViewById(R.id.search_editText);
+        editText = rootView.findViewById(R.id.search_editText);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = editable.toString();
+                if(text.contains(System.getProperty("line.separator"))) {
+                    text = text.replace(System.getProperty("line.separator"), "");
+                    editText.setText(text);
+                    search();
+                }
+            }
+        });
+
         spinnerLanguage = rootView.findViewById(R.id.spinner_language);
         spinnerCategory = rootView.findViewById(R.id.spinner_category);
         spinnerAuthor = rootView.findViewById(R.id.spinner_author);
@@ -75,8 +101,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(downloadFinished) {
-                    search(editText.getText().toString(), getLanguageCode(), getCategroyCode(),
-                            getAuthorCode());
+                    search();
                 }
             }
         });
@@ -223,7 +248,12 @@ public class SearchFragment extends Fragment {
         return authors.get(category);
     }
 
-    private void search(String searchText, int languageCode, int categoryCode, int authorCode) {
+    private void search() {
+        String searchText = editText.getText().toString();
+        int languageCode = getLanguageCode();
+        int categoryCode = getCategroyCode();
+        int authorCode = getAuthorCode();
+
         Intent intent = new Intent(this.getActivity(), ResultActivity.class);
         intent.putExtra(ResultActivity.SEARCHTEXT, searchText);
         intent.putExtra(ResultActivity.LANGUAGE, languageCode);
