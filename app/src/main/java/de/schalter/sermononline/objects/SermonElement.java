@@ -14,6 +14,8 @@ import de.schalter.sermononline.Utils;
 
 public class SermonElement implements Serializable {
 
+    private static final long serialVersionUID = 146862L;
+
     //possible names of the columns at sermon-online.com
     private static final String[] TITLES = {"title", "titel"};
     private static final String[] AUTHORS = {"author", "autor"};
@@ -38,6 +40,10 @@ public class SermonElement implements Serializable {
 
     //id in the database
     public int id = -1;
+
+    private long timeLastOpened;
+    private int lastAudioPosition;
+    private String notes;
 
     public SermonElement() {
         headers = new ArrayList<>();
@@ -111,4 +117,27 @@ public class SermonElement implements Serializable {
         return "Elements: " + data + "\n";
     }
 
+    public long getTimeLastOpened() {
+        return timeLastOpened;
+    }
+
+    public void setTimeLastOpened(long timeLastOpened) {
+        this.timeLastOpened = timeLastOpened;
+    }
+
+    public int getLastAudioPosition() {
+        return lastAudioPosition;
+    }
+
+    public void setLastAudioPosition(int lastAudioPosition) {
+        this.lastAudioPosition = lastAudioPosition;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }
