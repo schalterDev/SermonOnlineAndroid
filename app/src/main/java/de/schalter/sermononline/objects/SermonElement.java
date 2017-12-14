@@ -1,10 +1,23 @@
 package de.schalter.sermononline.objects;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.FileProvider;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.schalter.sermononline.DBHelper;
+import de.schalter.sermononline.MainActivity;
+import de.schalter.sermononline.OpenSermonActivity;
+import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.Utils;
 
 /**
@@ -115,6 +128,44 @@ public class SermonElement implements Serializable {
 
     public String toString() {
         return "Elements: " + data + "\n";
+    }
+
+    /**
+     * starts a new SermonActivity
+     */
+    public static void startSermonActivity(Context context, String url) {
+        Intent intent = new Intent(context, SermonActivity.class);
+        intent.putExtra(SermonActivity.URL, url);
+        context.startActivity(intent);
+    }
+
+    public void openNoteActivity(Context context) {
+        Intent intent = new Intent(context, OpenSermonActivity.class);
+        intent.putExtra(OpenSermonActivity.SERMON_ID, id);
+        context.startActivity(intent);
+    }
+
+    public void openRessource(Activity activity) throws FileNotFoundException, ActivityNotFoundException {
+        DBHelper dbHelper = DBHelper.getInstance(activity);
+
+        /*
+        long downloadId = dbHelper.getDownloadId(id);
+        Utils.openWithDownloadManager(context, downloadId);
+        */
+        String path = dbHelper.getRessourcePath(id);
+
+        //Check if path exists
+        if (path == null || !(new File(URI.create(path)).exists())) {
+            throw new FileNotFoundException("File: " + path + ", not found");
+        } else {
+            Intent newIntent = new Intent(Intent.ACTION_VIEW,
+                    FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".de.schalter.sermononline",
+                            new File(URI.create(path))));
+            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            activity.startActivity(newIntent);
+        }
+
     }
 
     public long getTimeLastOpened() {

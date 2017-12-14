@@ -296,6 +296,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public void insertNote(int id, String note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NOTES, note);
+
+        // update Row
+        db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
+    }
+
     public String getSermonPageUrl(int id) {
         return getColumn(KEY_DOWNLOADURL, id);
     }

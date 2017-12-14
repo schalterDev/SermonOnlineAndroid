@@ -133,14 +133,9 @@ public class DownloadsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!selectionMode) {
-                    SermonView sermonView = (SermonView) view;
-                    try {
-                        sermonView.clickOpenRessource((MainActivity) getActivity());
-                    } catch (FileNotFoundException | ActivityNotFoundException e) {
-                        e.printStackTrace();
-                        SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(getActivity(), sermonView.getSermonId());
-                        sermonNotFoundDialog.show();
-                    }
+                    int sermonId = ((SermonView) view).getSermonId();
+                    DBHelper dbHelper = DBHelper.getInstance(getContext());
+                    dbHelper.getSermonElement(sermonId).openNoteActivity(getContext());
                 } else {
                     if(selected.contains(position)) {
                         removeSelection((SermonView) view, position);
