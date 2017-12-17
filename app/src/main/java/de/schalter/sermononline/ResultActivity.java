@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Result;
+
 import de.schalter.sermononline.dialogs.ErrorDialog;
+import de.schalter.sermononline.objects.SermonElement;
 import de.schalter.sermononline.objects.SermonListElement;
 import de.schalter.sermononline.parser.JsoupResultParser;
 import de.schalter.sermononline.parser.NoDataFoundException;
@@ -89,7 +92,8 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SermonView sermonView = (SermonView) view;
-                sermonView.clickStartActivity();
+
+                SermonElement.startSermonActivity(ResultActivity.this, sermonView.getUrl());
             }
         });
 

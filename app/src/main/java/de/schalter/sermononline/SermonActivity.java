@@ -91,14 +91,7 @@ public class SermonActivity extends AppCompatActivity {
      */
     private void download() {
         final String linkContains = "dyndns.org";
-        HashMap<String, String> links = new HashMap<>();
-
-        for(int indexData : sermonElement.links.keySet()) {
-            String link = sermonElement.links.get(indexData);
-            if(link.contains(linkContains)) {
-                links.put(sermonElement.data.get(indexData), link);
-            }
-        }
+        HashMap<String, String> links = sermonElement.getLinksWithDescription(linkContains);
 
         new SermonDownloadDialog(this, R.string.available_downloads, links, sermonElement).show();
     }
@@ -166,22 +159,91 @@ public class SermonActivity extends AppCompatActivity {
     }
 
     private void loadSermon(SermonElement sermonElement) {
+        final int TITLE = 0;
+        final int AUTHOR = 1;
+        final int PASSAGES = 2;
+        final int LANGUAGE = 3;
+        final int CATEGORIE = 4;
+        final int DATE = 5;
+        final int DURATION = 6;
+        final int PAGES = 7;
+        final int COUNTROWS = 8;
+
         table.setColumnShrinkable(1, true);
-        for(int i = 0; i < sermonElement.data.size(); i++) {
+        for(int i = 0; i < COUNTROWS; i++) {
             TableRow row = new TableRow(this);
             TextView title = new TextView(this);
-            title.setText(sermonElement.headers.get(i));
             title.setMaxWidth((int) Utils.convertDpToPixel(120));
 
             TextView content = new TextView(this);
-            content.setText(sermonElement.data.get(i));
-
             content.setPadding(dpToPx(3), 0, 0, 0);
 
-            row.addView(title);
-            row.addView(content);
+            boolean add = false;
 
-            table.addView(row);
+            switch(i) {
+                case TITLE:
+                    if(sermonElement.getTitle() != null) {
+                        title.setText(R.string.title);
+                        content.setText(sermonElement.getTitle());
+                        add = true;
+                    }
+                    break;
+                case AUTHOR:
+                    if(sermonElement.getAuthor() != null) {
+                        title.setText(R.string.author);
+                        content.setText(sermonElement.getAuthor());
+                        add = true;
+                    }
+                    break;
+                case PASSAGES:
+                    if(sermonElement.getPassage() != null) {
+                        title.setText(R.string.passages);
+                        content.setText(sermonElement.getPassage());
+                        add = true;
+                    }
+                    break;
+                case LANGUAGE:
+                    if(sermonElement.getLanguage() != null) {
+                        title.setText(R.string.language);
+                        content.setText(sermonElement.getLanguage());
+                        add = true;
+                    }
+                    break;
+                case CATEGORIE:
+                    if(sermonElement.getCategory() != null) {
+                        title.setText(R.string.category);
+                        content.setText(sermonElement.getCategory());
+                        add = true;
+                    }
+                    break;
+                case DATE:
+                    if(sermonElement.getDateAsString() != null) {
+                        title.setText(R.string.date);
+                        content.setText(sermonElement.getDateAsString());
+                        add = true;
+                    }
+                    break;
+                case DURATION:
+                    if(sermonElement.getDurationAsString() != null) {
+                        title.setText(R.string.duration);
+                        content.setText(sermonElement.getDurationAsString());
+                        add = true;
+                    }
+                    break;
+                case PAGES:
+                    if(sermonElement.getPages() != 0) {
+                        title.setText(R.string.pages);
+                        content.setText(String.valueOf(sermonElement.getPages()));
+                        add = true;
+                    }
+                    break;
+            }
+
+            if(add) {
+                row.addView(title);
+                row.addView(content);
+                table.addView(row);
+            }
         }
     }
 

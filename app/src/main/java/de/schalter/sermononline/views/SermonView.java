@@ -16,6 +16,7 @@ import java.net.URI;
 
 import de.schalter.sermononline.DBHelper;
 import de.schalter.sermononline.MainActivity;
+import de.schalter.sermononline.OpenSermonActivity;
 import de.schalter.sermononline.R;
 import de.schalter.sermononline.SermonActivity;
 import de.schalter.sermononline.dialogs.SermonNotFoundDialog;
@@ -41,12 +42,12 @@ public class SermonView extends RelativeLayout {
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mInflater.inflate(R.layout.sermon_view, this , true);
 
-        TextView author = (TextView) findViewById(R.id.sermon_author);
-        title = (TextView) findViewById(R.id.sermon_title);
-        TextView category = (TextView) findViewById(R.id.sermon_categorie);
-        TextView bible = (TextView) findViewById(R.id.sermon_bible);
-        TextView date = (TextView) findViewById(R.id.sermon_date);
-        TextView duration = (TextView) findViewById(R.id.sermon_duration);
+        TextView author = findViewById(R.id.sermon_author);
+        title = findViewById(R.id.sermon_title);
+        TextView category = findViewById(R.id.sermon_categorie);
+        TextView bible = findViewById(R.id.sermon_bible);
+        TextView date = findViewById(R.id.sermon_date);
+        TextView duration = findViewById(R.id.sermon_duration);
 
         title.setText(sermonListElement.elementsText.get(SermonListElement.TITLE));
         author.setText(sermonListElement.elementsText.get(SermonListElement.AUTHOR));
@@ -77,37 +78,7 @@ public class SermonView extends RelativeLayout {
         return id;
     }
 
-    /**
-     * starts a new SermonActivity
-     */
-    public void clickStartActivity() {
-        Intent intent = new Intent(context, SermonActivity.class);
-        intent.putExtra(SermonActivity.URL, url);
-        context.startActivity(intent);
+    public String getUrl() {
+        return url;
     }
-
-    public void clickOpenRessource(MainActivity activity) throws FileNotFoundException, ActivityNotFoundException {
-        DBHelper dbHelper = DBHelper.getInstance(getContext());
-
-        /*
-        long downloadId = dbHelper.getDownloadId(id);
-        Utils.openWithDownloadManager(context, downloadId);
-        */
-        String path = dbHelper.getRessourcePath(id);
-
-        //Check if path exists
-        if (path == null || !(new File(URI.create(path)).exists())) {
-            SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(activity, id);
-            sermonNotFoundDialog.show();
-        } else {
-            Intent newIntent = new Intent(Intent.ACTION_VIEW,
-                    FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".de.schalter.sermononline",
-                            new File(URI.create(path))));
-            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            getContext().startActivity(newIntent);
-        }
-
-    }
-
 }
