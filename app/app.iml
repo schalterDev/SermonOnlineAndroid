@@ -122,7 +122,6 @@
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.0.2" level="project" />
     <orderEntry type="library" name="com.android.support:support-core-ui-26.1.0" level="project" />
-    <orderEntry type="library" name="jp.wasabeef:richeditor-android-1.2.2" level="project" />
     <orderEntry type="library" scope="TEST" name="com.google.code.findbugs:jsr305:2.0.1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.hamcrest:hamcrest-core:1.3@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-compat-26.1.0" level="project" />
@@ -152,6 +151,7 @@
     <orderEntry type="library" name="com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" name="com.google.firebase:firebase-analytics-11.6.2" level="project" />
     <orderEntry type="library" name="com.google.android.gms:play-services-ads-license-11.6.2" level="project" />
+    <orderEntry type="library" name="jp.wasabeef:richeditor-android-1.2.2" level="project" />
     <orderEntry type="library" name="__local_aars__:/media/martin/Daten-Linux/Programmieren/sermon-online/android-app/app/libs/jsoup-1.11.2.jar:unspecified@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="org.hamcrest:hamcrest-library:1.3@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.android.support.test:runner-0.5" level="project" />
