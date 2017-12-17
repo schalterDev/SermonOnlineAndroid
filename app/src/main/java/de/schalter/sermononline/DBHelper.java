@@ -99,28 +99,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(sqlCreate);
     }
 
-    private static final String DATABASE_ALTER_ADD_NOTES = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_NOTES + " TEXT;";
-
-    private static final String DATABASE_ALTER_ADD_TIMELASTOPENED = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_TIMELASTOPENED + " INTEGER;";
-
-    private static final String DATABASE_ALTER_ADD_LASTAUDIOPOSITION = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_LASTAUDIOPOSITION + " INTEGER;";
-
     private static final String DROP_TABLE = "DROP TABLE " + T_DOWNLOADS + ";";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(oldVersion) {
-            case 1:
-                //upgrade logic from version 1 to 2
-                db.execSQL(DATABASE_ALTER_ADD_NOTES);
-                db.execSQL(DATABASE_ALTER_ADD_TIMELASTOPENED);
-                db.execSQL(DATABASE_ALTER_ADD_LASTAUDIOPOSITION);
             case 2:
                 //upgrade logic from version 2 to 3
                 db.execSQL(DROP_TABLE);
