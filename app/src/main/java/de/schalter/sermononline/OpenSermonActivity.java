@@ -28,42 +28,49 @@ public class OpenSermonActivity extends AppCompatActivity {
     private DBHelper dbHelper;
 
     private RichEditor mEditor;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_sermon);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_layout);
+        coordinatorLayout = findViewById(R.id.coordinator_layout);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupRichTextEditor();
 
+        dbHelper = DBHelper.getInstance(this);
+
         Intent intent = getIntent();
-        int sermonId = intent.getIntExtra(SERMON_ID, -1);
+        final int sermonId = intent.getIntExtra(SERMON_ID, -1);
 
-        if(sermonId != -1) {
-            dbHelper = DBHelper.getInstance(this);
-            sermonElement = dbHelper.getSermonElement(sermonId);
-
-            mEditor.setHtml(sermonElement.getNotes());
-
-            getSupportActionBar().setTitle(sermonElement.data.get(0));
-
-            try {
-                sermonElement.openRessource(this);
-            } catch (FileNotFoundException | ActivityNotFoundException e) {
-                e.printStackTrace();
-                SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(this, sermonId);
-                sermonNotFoundDialog.show();
-            }
-        } else {
+        if(sermonId == -1) {
             Log.e("SermonOnline", "no sermonId in intent (OpenSermonActivity)");
             mEditor.setEnabled(false);
             mEditor.setInputEnabled(false);
             Snackbar.make(coordinatorLayout, R.string.error_app_id, Snackbar.LENGTH_INDEFINITE).show();
+            return;
+        } else {
+            loadSermon(sermonId);
+        }
+    }
+
+    private void loadSermon(int sermonId) {
+        sermonElement = dbHelper.getSermonElement(sermonId);
+
+        mEditor.setHtml(sermonElement.getNotes());
+
+        getSupportActionBar().setTitle(sermonElement.getTitle());
+
+        try {
+            sermonElement.openRessource(this);
+        } catch (FileNotFoundException | ActivityNotFoundException e) {
+            e.printStackTrace();
+            SermonNotFoundDialog sermonNotFoundDialog = new SermonNotFoundDialog(this, sermonId);
+            sermonNotFoundDialog.show();
         }
     }
 

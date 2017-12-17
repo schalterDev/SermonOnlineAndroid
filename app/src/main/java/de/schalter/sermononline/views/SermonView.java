@@ -42,12 +42,12 @@ public class SermonView extends RelativeLayout {
         LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mInflater.inflate(R.layout.sermon_view, this , true);
 
-        TextView author = (TextView) findViewById(R.id.sermon_author);
-        title = (TextView) findViewById(R.id.sermon_title);
-        TextView category = (TextView) findViewById(R.id.sermon_categorie);
-        TextView bible = (TextView) findViewById(R.id.sermon_bible);
-        TextView date = (TextView) findViewById(R.id.sermon_date);
-        TextView duration = (TextView) findViewById(R.id.sermon_duration);
+        TextView author = findViewById(R.id.sermon_author);
+        title = findViewById(R.id.sermon_title);
+        TextView category = findViewById(R.id.sermon_categorie);
+        TextView bible = findViewById(R.id.sermon_bible);
+        TextView date = findViewById(R.id.sermon_date);
+        TextView duration = findViewById(R.id.sermon_duration);
 
         title.setText(sermonListElement.elementsText.get(SermonListElement.TITLE));
         author.setText(sermonListElement.elementsText.get(SermonListElement.AUTHOR));

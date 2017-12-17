@@ -36,7 +36,11 @@
     <string name="title_activity_open_sermon">OpenSermonActivity</string>
     <string name="error_app_id">Error loading sermon</string>
     <string name="insert_notes">Insert notes here...</string>
-
+    <string name="title">Title</string>
+    <string name="passages">Passages</string>
+    <string name="date">Date</string>
+    <string name="duration">Duration</string>
+    <string name="pages">Pages</string>
     <!-- Strings related to Settings -->
 
 </resources>

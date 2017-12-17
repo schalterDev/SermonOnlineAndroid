@@ -92,7 +92,7 @@ public class Utils {
     }
 
     public static void downloadSermon(Context context, SermonElement sermonElement, String link) {
-        String title = sermonElement.data.get(0);
+        String title = sermonElement.getTitle();
 
         //"?" is not allowed in fileName
         while(title.contains("?"))
@@ -212,6 +212,44 @@ public class Utils {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return dp;
+    }
+
+    private static final String DEFAULT_SEPARATOR = "%-%";
+
+    /**
+     * Converts the list into a String using the separator
+     * @param list
+     * @param separtor
+     * @param <T>
+     * @return
+     */
+    public static <T> String convertListToString(List<T> list, String separtor) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for(T element : list ) {
+            stringBuilder.append(element.toString());
+            stringBuilder.append(separtor);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Converts a list into a String using the DEFAULT_SEPARATOR (%-%)
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> String convertListToString(List<T> list) {
+        return convertListToString(list, DEFAULT_SEPARATOR);
+    }
+
+    public static List<String> convertStringToList(String string) {
+        return convertStringToList(string, DEFAULT_SEPARATOR);
+    }
+
+    public static List<String> convertStringToList(String string, String separtor) {
+        return Arrays.asList(string.split(separtor));
     }
 
 }
