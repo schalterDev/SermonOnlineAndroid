@@ -7,8 +7,6 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.io.IOException;
-import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +21,25 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "sermonOnline";
     private static final String T_DOWNLOADS = "t_downloads";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private static final String KEY_ID = "id";
     private static final String KEY_DOWNLOADURL = "downloadUrl";
     private static final String KEY_DOWNLOADURL_FILE = "downloadUrlFile";
     private static final String KEY_PATH = "path";
+
+    //dont use this in newer versions
+    @Deprecated
     private static final String KEY_SERMONOBJECT = "sermonObject";
+    //use this instead
+    private static final String KEY_HEADERS = "sermonHeaders";
+    private static final String KEY_DATA = "sermonData";
+
     private static final String KEY_DOWNLOAD_ID = "downloadId";
     private static final String KEY_NOTES = "notes";
     private static final String KEY_TIMELASTOPENED = "lastTimeOpened";
     private static final String KEY_LASTAUDIOPOSITION = "lastAudioPosition";
+    private static final String KEY_MARKED = "marked";
 
     private static DBHelper instance;
 
@@ -51,45 +57,59 @@ public class DBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
+    private static final String CREATE_TABLE_V_1 = "create table if not exists " + T_DOWNLOADS + "(" +
+                                                    KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                                    KEY_DOWNLOAD_ID + " INTEGER, " +
+                                                    KEY_DOWNLOADURL + " TEXT, " +
+                                                    KEY_DOWNLOADURL_FILE + " TEXT, " +
+                                                    KEY_SERMONOBJECT + " TEXT, " +
+                                                    KEY_PATH + " TEXT" +
+                                                            ");";
+
+    private static final String CREATE_TABLE_V_2 = "create table if not exists " + T_DOWNLOADS + "(" +
+                                                    KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                                    KEY_DOWNLOAD_ID + " INTEGER, " +
+                                                    KEY_DOWNLOADURL + " TEXT, " +
+                                                    KEY_DOWNLOADURL_FILE + " TEXT, " +
+                                                    KEY_SERMONOBJECT + " TEXT, " +
+                                                    KEY_PATH + " TEXT, " +
+                                                    KEY_NOTES + " TEXT, " +
+                                                    KEY_TIMELASTOPENED + " INTEGER, " +
+                                                    KEY_LASTAUDIOPOSITION + " INTEGER" +
+                                                        ");";
+
+    private static final String CREATE_TABLE_V_3 = "create table if not exists " + T_DOWNLOADS + "(" +
+                                                    KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                                    KEY_DOWNLOAD_ID + " INTEGER, " +
+                                                    KEY_DOWNLOADURL + " TEXT, " +
+                                                    KEY_DOWNLOADURL_FILE + " TEXT, " +
+                                                    KEY_HEADERS + " TEXT, " +
+                                                    KEY_DATA + " TEXT, " +
+                                                    KEY_PATH + " TEXT, " +
+                                                    KEY_NOTES + " TEXT, " +
+                                                    KEY_TIMELASTOPENED + " INTEGER, " +
+                                                    KEY_LASTAUDIOPOSITION + " INTEGER, " +
+                                                    KEY_MARKED + " INTEGER" +
+                                                            ");";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sqlCreate = "create table if not exists " + T_DOWNLOADS + "(" +
-                KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                KEY_DOWNLOAD_ID + " INTEGER, " +
-                KEY_DOWNLOADURL + " TEXT, " +
-                KEY_DOWNLOADURL_FILE + " TEXT, " +
-                KEY_SERMONOBJECT + " TEXT, " +
-                KEY_PATH + " TEXT, " +
-                KEY_NOTES + " TEXT, " +
-                KEY_TIMELASTOPENED + " INTEGER, " +
-                KEY_LASTAUDIOPOSITION + " INTEGER" +
-                ");";
+        String sqlCreate = CREATE_TABLE_V_3;
 
         db.execSQL(sqlCreate);
     }
 
-    private static final String DATABASE_ALTER_ADD_NOTES = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_NOTES + " TEXT;";
-
-    private static final String DATABASE_ALTER_ADD_TIMELASTOPENED = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_TIMELASTOPENED + " INTEGER;";
-
-    private static final String DATABASE_ALTER_ADD_LASTAUDIOPOSITION = "ALTER TABLE "
-            + T_DOWNLOADS +
-            " ADD COLUMN " + KEY_LASTAUDIOPOSITION + " INTEGER;";
+    private static final String DROP_TABLE = "DROP TABLE " + T_DOWNLOADS + ";";
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(oldVersion) {
             case 1:
-                //upgrade logic from version 1 to 2
-                db.execSQL(DATABASE_ALTER_ADD_NOTES);
-                db.execSQL(DATABASE_ALTER_ADD_TIMELASTOPENED);
-                db.execSQL(DATABASE_ALTER_ADD_LASTAUDIOPOSITION);
             case 2:
                 //upgrade logic from version 2 to 3
+                db.execSQL(DROP_TABLE);
+                db.execSQL(CREATE_TABLE_V_3);
+
             case 3:
                 //upgrade logic from version 3 to 4
                 break;
@@ -132,11 +152,8 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_DOWNLOADURL, downloadUrl);
         values.put(KEY_DOWNLOADURL_FILE, downloadUrlFile);
-        try {
-            values.put(KEY_SERMONOBJECT, Utils.toString(sermonElement));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        values.put(KEY_HEADERS, Utils.convertListToString(sermonElement.getHeaders()));
+        values.put(KEY_DATA, Utils.convertListToString(sermonElement.getData()));
         values.put(KEY_DOWNLOAD_ID, downloadKeyId);
 
         if(newEntry) {
@@ -173,31 +190,31 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public List<SermonElement> getAllDownloads() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_SERMONOBJECT + ", " +
+        Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_DATA + ", " + KEY_HEADERS + ", " +
                 KEY_NOTES + ", " + KEY_TIMELASTOPENED + ", " + KEY_LASTAUDIOPOSITION + " from " + T_DOWNLOADS
                 + " ORDER BY " + KEY_ID + " DESC",null);
 
         List<SermonElement> downloadElements = new ArrayList<>();
-        List<Integer> removeElements = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                try {
-                    SermonElement sermonElement = (SermonElement) Utils.fromString(cursor.getString(1));
-                    sermonElement.id = cursor.getInt(0);
-                    if(!cursor.isNull(2))
-                        sermonElement.setNotes(cursor.getString(2));
-                    if(!cursor.isNull(3))
-                        sermonElement.setTimeLastOpened(cursor.getLong(3));
-                    if(!cursor.isNull(4))
-                        sermonElement.setLastAudioPosition(cursor.getInt(4));
-                    downloadElements.add(sermonElement);
-                } catch (InvalidClassException e) {
-                    //Delete this entry
-                    removeElements.add(cursor.getInt(0));
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                List<String> data = null;
+                if(!cursor.isNull(1))
+                    data = Utils.convertStringToList(cursor.getString(1));
+
+                List<String> headers = null;
+                if(!cursor.isNull(1))
+                    headers = Utils.convertStringToList(cursor.getString(2));
+
+                SermonElement sermonElement = new SermonElement(headers, data);
+                sermonElement.id = cursor.getInt(0);
+                if(!cursor.isNull(3))
+                    sermonElement.setNotes(cursor.getString(3));
+                if(!cursor.isNull(4))
+                    sermonElement.setTimeLastOpened(cursor.getLong(4));
+                if(!cursor.isNull(5))
+                    sermonElement.setLastAudioPosition(cursor.getInt(5));
+                downloadElements.add(sermonElement);
 
                 cursor.moveToNext();
             }
@@ -206,34 +223,34 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        for(Integer id : removeElements) {
-            removeDownload(id);
-        }
-
         return downloadElements;
     }
 
     public SermonElement getSermonElement(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + KEY_SERMONOBJECT + ", " +
+        Cursor cursor = db.rawQuery("select " + KEY_DATA + ", " + KEY_HEADERS + ", " +
                         KEY_NOTES + ", " + KEY_TIMELASTOPENED + ", " + KEY_LASTAUDIOPOSITION +
                         " from " + T_DOWNLOADS + " WHERE " + KEY_ID + " = " + id,null);
 
         SermonElement sermonElement = null;
 
         if (cursor.moveToFirst()) {
-            try {
-                sermonElement = (SermonElement) Utils.fromString(cursor.getString(0));
-                sermonElement.id = id;
-                if(!cursor.isNull(1))
-                    sermonElement.setNotes(cursor.getString(1));
-                if(!cursor.isNull(2))
-                    sermonElement.setTimeLastOpened(cursor.getLong(2));
-                if(!cursor.isNull(3))
-                    sermonElement.setLastAudioPosition(cursor.getInt(3));
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            List<String> data = null;
+            if(!cursor.isNull(1))
+                data = Utils.convertStringToList(cursor.getString(0));
+
+            List<String> headers = null;
+            if(!cursor.isNull(1))
+                headers = Utils.convertStringToList(cursor.getString(1));
+
+            sermonElement = new SermonElement(headers, data);
+            sermonElement.id = id;
+            if(!cursor.isNull(2))
+                sermonElement.setNotes(cursor.getString(2));
+            if(!cursor.isNull(3))
+                sermonElement.setTimeLastOpened(cursor.getLong(3));
+            if(!cursor.isNull(4))
+                sermonElement.setLastAudioPosition(cursor.getInt(4));
         }
 
         cursor.close();
@@ -294,6 +311,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return null;
+    }
+
+    public void insertNote(int id, String note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NOTES, note);
+
+        // update Row
+        db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
+
+        db.close();
     }
 
     public String getSermonPageUrl(int id) {

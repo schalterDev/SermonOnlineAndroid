@@ -39,7 +39,7 @@
             android:label="@string/title_activity_sermon"
             android:parentActivityName=".ResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <receiver
             android:name=".receiver.DownloadReceiver"
@@ -64,12 +64,15 @@
             android:authorities="${applicationId}.de.schalter.sermononline"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths"/>
-
+                android:resource="@xml/paths" />
         </provider>
+
+        <activity
+            android:name=".OpenSermonActivity"
+            android:label="@string/title_activity_open_sermon"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

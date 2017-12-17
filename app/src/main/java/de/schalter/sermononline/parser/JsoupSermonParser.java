@@ -43,19 +43,25 @@ public class JsoupSermonParser extends JsoupParser {
     private void parseData(Element table) {
         sermonElement.sermonUrlPage = url;
 
+        int counterData = 0;
+        String lastHeader = "";
+
         Elements rows = table.select("> tbody > tr");
         for(Element row : rows) {
             Elements columns = row.select(">td");
             for(int i = 0; i < columns.size(); i++) {
-                if(i == 0 && columns.size() == 2) {
-                    sermonElement.headers.add(columns.get(i).text());
+                if(i == 0 && columns.size() == 2) { //new header
+                    lastHeader = columns.get(i).text().toLowerCase().replace(":", "");
+                    sermonElement.addHeader(lastHeader);
                 } else if(i == 1) {
-                    sermonElement.data.add(getDataFromString(columns.get(i).text()));
-                    checkForLinks(sermonElement.data.size() - 1, columns.get(i));
-                } else if (i == 0 && columns.size() == 1) {
-                    sermonElement.data.add(getDataFromString(columns.get(i).text()));
-                    sermonElement.headers.add(sermonElement.headers.get(sermonElement.headers.size() - 1));
-                    checkForLinks(sermonElement.data.size() - 1, columns.get(i));
+                    sermonElement.addData(getDataFromString(columns.get(i).text()));
+                    checkForLinks(counterData, columns.get(i));
+                    counterData++;
+                } else if (i == 0 && columns.size() == 1) { //same header as before
+                    sermonElement.addData(getDataFromString(columns.get(i).text()));
+                    sermonElement.addHeader(lastHeader);
+                    checkForLinks(counterData, columns.get(i));
+                    counterData++;
                 }
             }
         }
@@ -78,7 +84,7 @@ public class JsoupSermonParser extends JsoupParser {
     }
 
     /**
-     * Chekcs for a link in the given element.
+     * Checks for a link in the given element.
      * When a link is found it will be added to the sermonElement at the given index
      * @param index column in the table
      * @param element tablerow element
@@ -86,7 +92,7 @@ public class JsoupSermonParser extends JsoupParser {
     private void checkForLinks(int index, Element element) {
         Element linkElement = element.selectFirst("a[href]");
         if(linkElement != null) {
-            sermonElement.links.put(index, linkElement.attr("href"));
+            sermonElement.addLink(index, linkElement.attr("href"));
         }
     }
 
