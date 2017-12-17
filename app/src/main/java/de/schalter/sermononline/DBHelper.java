@@ -104,6 +104,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch(oldVersion) {
+            case 1:
             case 2:
                 //upgrade logic from version 2 to 3
                 db.execSQL(DROP_TABLE);
