@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import de.schalter.sermononline.objects.SermonElement;
 
@@ -42,12 +44,14 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String KEY_MARKED = "marked";
 
     private static DBHelper instance;
+    private static Lock lock;
 
     private Context context;
 
     private DBHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
         this.context = context;
+        lock = new ReentrantLock(false);
     }
 
     public static DBHelper getInstance(Context context) {
@@ -189,6 +193,8 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return all downloads
      */
     public List<SermonElement> getAllDownloads() {
+        lock.lock();
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("select " + KEY_ID + ", " + KEY_DATA + ", " + KEY_HEADERS + ", " +
                 KEY_NOTES + ", " + KEY_TIMELASTOPENED + ", " + KEY_LASTAUDIOPOSITION + " from " + T_DOWNLOADS
@@ -222,6 +228,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cursor.close();
         db.close();
+
+        lock.unlock();
 
         return downloadElements;
     }
@@ -314,6 +322,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertNote(int id, String note) {
+        lock.lock();
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -323,6 +332,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(T_DOWNLOADS, cv, KEY_ID + "=" + id, null);
 
         db.close();
+        lock.unlock();
     }
 
     public String getSermonPageUrl(int id) {
