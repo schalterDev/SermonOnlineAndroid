@@ -129,7 +129,7 @@ public class Utils {
      * @param array array
      * @param containObjects array with all element to check if they are in the array
      * @param <T>
-     * @return -1 if no element from containObjects is in array. Otherwise the first index
+     * @return -1 if no element from containObjects is in array. Otherwise the first index from first array
      */
     public static <T> int indexOf (T[] array, T[] containObjects) {
         return indexOf(Arrays.asList(array), containObjects);
@@ -171,8 +171,10 @@ public class Utils {
             if (ext.contains("/")) {
                 ext = ext.substring(0, ext.indexOf("/"));
             }
-            return ext.toLowerCase();
-
+            if(ext.length() > 0)
+                return ext.toLowerCase();
+            else
+                return null;
         }
     }
 
