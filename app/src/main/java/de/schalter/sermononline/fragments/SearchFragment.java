@@ -85,7 +85,8 @@ public class SearchFragment extends Fragment {
                 if(text.contains(System.getProperty("line.separator"))) {
                     text = text.replace(System.getProperty("line.separator"), "");
                     editText.setText(text);
-                    search();
+                    if(downloadFinished)
+                        search();
                 }
             }
         });
@@ -118,6 +119,7 @@ public class SearchFragment extends Fragment {
         Thread background = new Thread(new Runnable() {
             @Override
             public void run() {
+                downloadFinished = false;
                 String searchUrl = "http://sermon-online.com/search.pl?" +
                         "lang=" + Settings.getSystemLanguageCode() +
                         "&extended=1";
