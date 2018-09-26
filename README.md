@@ -1,4 +1,4 @@
-[![Build Status](https://jenkins.schalter-info.de/buildStatus/icon?job=Sermon%20Online%20Android)](https://jenkins.schalter-info.de/job/Sermon%20Online%20Android/)
+[![Build Status](https://jenkins.schalter-info.de/job/SermonOnlineAndroid/job/master/badge/icon)](https://jenkins.schalter-info.de/job/SermonOnlineAndroid/job/master/)
 
 ## Used librarys
 ### Richerditor-android
