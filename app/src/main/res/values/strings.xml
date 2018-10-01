@@ -41,6 +41,8 @@
     <string name="date">Date</string>
     <string name="duration">Duration</string>
     <string name="pages">Pages</string>
+    <string name="action_privacy">Privacy Policy</string>
+    <string name="privacy_url" translatable="false">https://sermon-online.webdesign-schalter.de/privacy</string>
     <!-- Strings related to Settings -->
 
 </resources>

@@ -1,6 +1,7 @@
 package de.schalter.sermononline;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -95,9 +96,17 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        /*
         if (id == R.id.action_settings) {
             this.startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        }*/
+
+        if (id == R.id.action_privacy) {
+            // open privacy website
+            String url =  getResources().getString(R.string.privacy_url);
+            Uri uri = Uri.parse(url);
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
         }
 
         return super.onOptionsItemSelected(item);
