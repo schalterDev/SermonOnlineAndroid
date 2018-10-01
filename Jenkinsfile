@@ -34,7 +34,7 @@ pipeline {
         // Run Lint and analyse the results
         sh './gradlew lintDebug'
         androidLint pattern: '**/lint-results-*.xml'
-        archiveArtifacts : true, artifacts: '**/lint-results-*.html'
+        archiveArtifacts '**/lint-results-*.html'
       }
     }
     //stage('Deploy') {
