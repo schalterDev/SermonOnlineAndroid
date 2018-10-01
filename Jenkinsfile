@@ -26,7 +26,7 @@ pipeline {
         sh './gradlew assembleDebug'
 
         // Archive the APKs so that they can be downloaded from Jenkins
-        archiveArtifacts '**/*.apk'
+        // archiveArtifacts '**/*.apk'
       }
     }
     stage('Static analysis') {
@@ -34,8 +34,7 @@ pipeline {
         // Run Lint and analyse the results
         sh './gradlew lintDebug'
         androidLint pattern: '**/lint-results-*.xml'
-        archiveArtifacts allowEmptyArchive: true, artifacts: '**/lint-results-*.html'
-
+        archiveArtifacts : true, artifacts: '**/lint-results-*.html'
       }
     }
     //stage('Deploy') {
