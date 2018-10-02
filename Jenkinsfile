@@ -23,6 +23,9 @@ pipeline {
         androidLint(pattern: '**/lint-results-*.xml')
       }
     }
+    stage('Deploy') {
+       step([$class: 'SignApksBuilder', apksToSign: '**/*-unsigned.apk', keyAlias: '', keyStoreId: 'sermon-online-cert']) 
+    }
   }
   options {
     skipStagesAfterUnstable()
