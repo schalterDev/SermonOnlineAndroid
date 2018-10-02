@@ -24,7 +24,9 @@ pipeline {
       }
     }
     stage('Deploy') {
+      steps {
        step([$class: 'SignApksBuilder', apksToSign: '**/*-unsigned.apk', keyAlias: '', keyStoreId: 'sermon-online-cert']) 
+      }
     }
   }
   options {
