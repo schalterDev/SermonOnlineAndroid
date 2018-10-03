@@ -24,9 +24,12 @@ pipeline {
       }
     }
     stage('Deploy') {
+      when {
+        // Only execute this stage when building from the `firebase-admob-master` branch
+        branch 'firebase-admob-master'
+      }
       steps {
         sh './gradlew assembleRelease'
-        archiveArtifacts '**/*.apk'
         signAndroidApks(archiveSignedApks: true, keyAlias: 'android-with-ads', keyStoreId: 'sermon-online-cert', apksToSign: '**/*-unsigned.apk')
       }
     }
