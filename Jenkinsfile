@@ -24,6 +24,7 @@ pipeline {
       }
     }
     stage('Deploy') {
+
       when {
         // Only execute this stage when building from the `firebase-admob-master` branch
         branch 'firebase-admob-master'
