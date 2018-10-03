@@ -24,28 +24,14 @@ pipeline {
       }
     }
     stage('Deploy') {
-      //when {
-        // Only execute this stage when building from the `beta` branch
-        //branch 'beta'
-      //}
-      environment {
-        // Assuming a file credential has been added to Jenkins, with the ID 'my-app-signing-keystore',
-        // this will export an environment variable during the build, pointing to the absolute path of
-        // the stored Android keystore file.  When the build ends, the temporarily file will be removed.
-        SIGNING_KEYSTORE = credentials('sermon-online-keystore')
 
-        // Similarly, the value of this variable will be a password stored by the Credentials Plugin
-        SIGNING_KEY_PASSWORD = credentials('sermon-online-keystore-password')
+      when {
+        // Only execute this stage when building from the `firebase-admob-master` branch
+        branch 'firebase-admob-master'
       }
       steps {
-        // Build the app in release mode, and sign the APK using the environment variables
         sh './gradlew assembleRelease'
-
-        // Archive the APKs so that they can be downloaded from Jenkins
-        archiveArtifacts '**/*.apk'
-
-        // Upload the APK to Google Play
-        //androidApkUpload googleCredentialsId: 'Google Play', apkFilesPattern: '**/*-release.apk', trackName: 'beta'
+        signAndroidApks(archiveSignedApks: true, keyAlias: 'android-with-ads', keyStoreId: 'sermon-online-cert', apksToSign: '**/*-unsigned.apk')
       }
     }
   }
