@@ -1,5 +1,6 @@
 package de.schalter.sermononline;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,14 +11,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import de.schalter.sermononline.fragments.DownloadsFragment;
 import de.schalter.sermononline.fragments.SearchFragment;
+import de.schalter.sermononline.settings.Settings;
 import de.schalter.sermononline.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,17 +46,19 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private CoordinatorLayout coordinatorLayout;
+    private RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Settings.initSettings(this);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = findViewById(R.id.main_content);
+        relativeLayout = findViewById(R.id.main_content);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -62,16 +71,37 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        if(Settings.getBoolean(Settings.SHOW_ADS, Settings.SHOW_ADS_DEFAULT)) {
+            AdView mAdView = findViewById(R.id.adView_main);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } else {
+            AdView mAdView = findViewById(R.id.adView_main);
+            relativeLayout.removeView(mAdView);
+        }
 
+        if(Settings.getBoolean(Settings.FIRST_START, Settings.FIRST_START_DEFAULT)) {
+            //show dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.show_ads);
+            builder.setMessage(R.string.show_ads_message);
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Settings.setBoolean(Settings.SHOW_ADS, false);
+                }
+            });
+            builder.setPositiveButton(R.string.activate_ads, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Settings.setBoolean(Settings.SHOW_ADS, true);
+                }
+            });
+
+            builder.show();
+
+            Settings.setBoolean(Settings.FIRST_START, false);
+        }
     }
 
     @Override
@@ -113,15 +143,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void snackbar(int message) {
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     public void snackbar(int message, int duration) {
-        Snackbar.make(coordinatorLayout, message, duration).show();
+        Snackbar.make(relativeLayout, message, duration).show();
     }
 
     public void snackbarWithAction(int message, int duration, int actionText, final Runnable action) {
-        Snackbar.make(coordinatorLayout, message, duration).setAction(actionText, new View.OnClickListener() {
+        Snackbar.make(relativeLayout, message, duration).setAction(actionText, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 action.run();

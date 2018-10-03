@@ -12,7 +12,19 @@ import java.util.Locale;
 
 public class Settings {
 
+    public static final String SHOW_ADS = "showAds";
+    public static final boolean SHOW_ADS_DEFAULT = false;
+
+    public static final String FIRST_START = "firstStart";
+    public static final boolean FIRST_START_DEFAULT = true;
+
     private static SharedPreferences settings;
+
+    public static void setBoolean(String tag, boolean value) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(tag, value);
+        editor.apply();
+    }
 
     public static boolean getBoolean(String tag, boolean defaultBoolean) {
         return settings.getBoolean(tag, defaultBoolean);
