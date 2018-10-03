@@ -27,7 +27,7 @@ pipeline {
       steps {
         sh './gradlew assembleRelease'
         archiveArtifacts '**/*.apk'
-        signAndroidApks(archiveSignedApks: true, keyAlias: 'sermon-online-cert', keyStoreId: 'android-with-ads', apksToSign: '**/*-unsigned.apk')
+        signAndroidApks(archiveSignedApks: true, keyAlias: 'android-with-ads', keyStoreId: 'sermon-online-cert', apksToSign: '**/*-unsigned.apk')
       }
     }
   }
