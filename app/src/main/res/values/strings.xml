@@ -45,8 +45,4 @@
     <string name="privacy_url" translatable="false">https://sermon-online.webdesign-schalter.de/privacy</string>
     <!-- Strings related to Settings -->
 
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-2270371481189370/1247044476</string>
-    <string name="show_ads">Show Ads</string>
-    <string name="activate_ads">Activate ads</string>
-    <string name="show_ads_message">If you want to support the developer you can activate a small ad banner at the bottom (can be changed in the settings)</string>
 </resources>

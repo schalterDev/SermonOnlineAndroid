@@ -1,8 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="showAds"
-        android:title="@string/show_ads" />
+
 </PreferenceScreen>
