@@ -44,6 +44,7 @@
     <string name="error_app_id">Fehler beim laden der Predigt</string>
     <string name="insert_notes">Notizen...</string>
     <string name="title_activity_open_sermon">OpenSermonActivity</string>
+    <string name="action_privacy">Datenschutzerklärung</string>
     <string name="show_ads">Zeige Werbung</string>
     <string name="activate_ads">Werbung aktivieren</string>
     <string name="show_ads_message">Wenn du den Entwickler unterstützen möchtest kannst du ein kleines Werbebanner aktivieren (kann in den Einstellungen geändert werden)</string>
