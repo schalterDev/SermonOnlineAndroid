@@ -25,7 +25,12 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-       step([$class: 'SignApksBuilder', apksToSign: '**/*-unsigned.apk', keyAlias: '', keyStoreId: 'sermon-online-cert']) 
+        // Build the app in release mode, and sign the APK using the environment variables
+        sh './gradlew assembleRelease'
+
+        // Archive the APKs so that they can be downloaded from Jenkins
+        archiveArtifacts '**/*.apk'
+        step([$class: 'SignApksBuilder', apksToSign: '**/*-unsigned.apk', keyAlias: '', keyStoreId: 'sermon-online-cert']) 
       }
     }
   }
