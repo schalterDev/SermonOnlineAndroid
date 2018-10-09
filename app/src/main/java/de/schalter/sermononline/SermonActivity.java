@@ -28,6 +28,7 @@ import de.schalter.sermononline.parser.NoDataFoundException;
 
 public class SermonActivity extends AppCompatActivity {
 
+    static final String linkContains = "sermon-online.com";
     static public final String URL = "url";
 
     private String url;
@@ -90,7 +91,6 @@ public class SermonActivity extends AppCompatActivity {
      * download button was clicked
      */
     private void download() {
-        final String linkContains = "dyndns.org";
         HashMap<String, String> links = sermonElement.getLinksWithDescription(linkContains);
 
         new SermonDownloadDialog(this, R.string.available_downloads, links, sermonElement).show();
