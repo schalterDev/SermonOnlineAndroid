@@ -35,6 +35,8 @@ import de.schalter.sermononline.settings.Settings;
 
 public class SearchFragment extends Fragment {
 
+    public static String BASE_URL = "https://www.sermon-online.com";
+
     private static SearchFragment instance;
 
     private HashMap<String, Integer> languages;
@@ -120,7 +122,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void run() {
                 downloadFinished = false;
-                String searchUrl = "http://sermon-online.com/search.pl?" +
+                String searchUrl = BASE_URL + "/search.pl?" +
                         "lang=" + Settings.getSystemLanguageCode() +
                         "&extended=1";
 
