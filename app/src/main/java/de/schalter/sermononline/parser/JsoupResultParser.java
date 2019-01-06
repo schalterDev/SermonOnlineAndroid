@@ -14,6 +14,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.schalter.sermononline.fragments.SearchFragment;
 import de.schalter.sermononline.objects.SermonListElement;
 
 public class JsoupResultParser extends JsoupParser {
@@ -94,7 +95,7 @@ public class JsoupResultParser extends JsoupParser {
             //check if the text is a link and save it (only first link)
             Element linkElement = column.selectFirst("a[href]");
             if(linkElement != null) {
-                sermonListElement.links.put(columnCounter, "http://sermon-online.com/" + linkElement.attr("href"));
+                sermonListElement.links.put(columnCounter, SearchFragment.BASE_URL + "/" + linkElement.attr("href"));
             }
         }
 

@@ -27,6 +27,7 @@ import java.util.List;
 import javax.xml.transform.Result;
 
 import de.schalter.sermononline.dialogs.ErrorDialog;
+import de.schalter.sermononline.fragments.SearchFragment;
 import de.schalter.sermononline.objects.SermonElement;
 import de.schalter.sermononline.objects.SermonListElement;
 import de.schalter.sermononline.parser.JsoupResultParser;
@@ -170,7 +171,7 @@ public class ResultActivity extends AppCompatActivity {
      */
     private String searchUrl(String searchText, String languageString, int startIndex) {
         String searchEncoded = Uri.encode(searchText);
-        String url = "http://sermon-online.com/search.pl?" +
+        String url = SearchFragment.BASE_URL +  "/search.pl?" +
                 "lang=" + languageString +
                 "&id=0" +
                 "&start=" + startIndex +
