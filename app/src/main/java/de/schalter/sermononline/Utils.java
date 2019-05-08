@@ -101,6 +101,9 @@ public class Utils {
         int indexLastPoint = link.lastIndexOf(".");
         String fileEnding = link.substring(indexLastPoint + 1);
 
+        // move from https to http. Downloadmanager will not download from https I dont know why
+        link = link.replace("https://", "http://");
+
         long downloadId = Utils.downloadDataWithDownloadManager(context, Uri.parse(link),
                 title, title, title + "." + fileEnding);
 

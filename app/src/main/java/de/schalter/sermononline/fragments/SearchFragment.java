@@ -35,7 +35,8 @@ import de.schalter.sermononline.settings.Settings;
 
 public class SearchFragment extends Fragment {
 
-    public static String BASE_URL = "https://www.sermon-online.com";
+    public static String BASE_HOST = "sermon-online.com";
+    public static String BASE_URL = "https://www." + BASE_HOST;
 
     private static SearchFragment instance;
 
